@@ -11,6 +11,10 @@
   float: left;
 }
 
+.PlotTypeRadioContainer {
+  padding-bottom: 10px;
+}
+
 .ComparisonToggleContainer {
 
 }

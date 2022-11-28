@@ -44,24 +44,24 @@ const options = [
 ];
 
 
-const ImageDisplay = () => {
+const ImageDisplay = (props) => {
 
   const [selectedProduct, setSelectedProduct] = useState(options[0].options[0]);
   const [selectedDay, setSelectedDay] = useState(1);
 
   const keyPressHandler = ({ key }) => {
-    console.log(key, selectedDay)
-    if (key === "ArrowRight") {
-      if (selectedDay < 5) {
-        console.log("here")
-        setSelectedDay(selectedDay+1)
-      }
-    } 
-    if (key === "ArrowLeft") {
-      if (selectedDay > 1) {
-        setSelectedDay(selectedDay-1)
-      }
-    } 
+    if (props.plotType === 'current') {
+      if (key === "ArrowRight") {
+        if (selectedDay < 5) {
+          setSelectedDay(selectedDay+1)
+        }
+      } 
+      if (key === "ArrowLeft") {
+        if (selectedDay > 1) {
+          setSelectedDay(selectedDay-1)
+        }
+      } 
+    }
   }
 
   const handleDayChange = (e) => {
@@ -86,13 +86,19 @@ const ImageDisplay = () => {
           placeholder={'Select Product'}
         />
       </div>
-      <div className={styles.DaySelectContainer}>
-        <button className={`${styles.daySelectButton} ${selectedDay === 1 ? styles.selected : ''}`} onClick={handleDayChange} value={1}>Day 1</button>
-        <button className={`${styles.daySelectButton} ${selectedDay === 2 ? styles.selected : ''}`} onClick={handleDayChange} value={2}>Day 2</button>
-        <button className={`${styles.daySelectButton} ${selectedDay === 3 ? styles.selected : ''}`} onClick={handleDayChange} value={3}>Day 3</button>
-        <button className={`${styles.daySelectButton} ${selectedDay === 4 ? styles.selected : ''}`} onClick={handleDayChange} value={4}>Day 4</button>
-        <button className={`${styles.daySelectButton} ${selectedDay === 5 ? styles.selected : ''}`} onClick={handleDayChange} value={5}>Day 5</button>
-      </div>
+      {
+        props.plotType === 'current' ?
+        <div className={styles.DaySelectContainer}>
+          <button className={`${styles.daySelectButton} ${selectedDay === 1 ? styles.selected : ''}`} onClick={handleDayChange} value={1}>Day 1</button>
+          <button className={`${styles.daySelectButton} ${selectedDay === 2 ? styles.selected : ''}`} onClick={handleDayChange} value={2}>Day 2</button>
+          <button className={`${styles.daySelectButton} ${selectedDay === 3 ? styles.selected : ''}`} onClick={handleDayChange} value={3}>Day 3</button>
+          <button className={`${styles.daySelectButton} ${selectedDay === 4 ? styles.selected : ''}`} onClick={handleDayChange} value={4}>Day 4</button>
+          <button className={`${styles.daySelectButton} ${selectedDay === 5 ? styles.selected : ''}`} onClick={handleDayChange} value={5}>Day 5</button>
+        </div>
+        :
+        null
+      }
+     
       <div className={styles.ImgContainer}>
         <img className={styles.ImgElement} src={baseURL + selectedProduct.value + 'day' + selectedDay.toString() + '.png'}/>
       </div>
