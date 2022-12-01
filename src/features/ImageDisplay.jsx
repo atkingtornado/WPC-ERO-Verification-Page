@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 
+import DatePicker from "react-datepicker";
+
 import styles from './ImageDisplay.module.css';
+import "react-datepicker/dist/react-datepicker.css"
 
 const baseURL = 'https://origin.wpc.ncep.noaa.gov/verification/ero_verif/images/'
 
@@ -48,6 +51,8 @@ const ImageDisplay = (props) => {
 
   const [selectedProduct, setSelectedProduct] = useState(options[0].options[0]);
   const [selectedDay, setSelectedDay] = useState(1);
+  const [selectedArchiveDate, setSelectedArchiveDate] = useState((new Date()) - 1);
+  const [imgURL, setimgURL] = useState(baseURL + selectedProduct.value + 'day' + selectedDay.toString() + '.png')
 
   const keyPressHandler = ({ key }) => {
     if (props.plotType === 'current') {
@@ -67,6 +72,14 @@ const ImageDisplay = (props) => {
   const handleDayChange = (e) => {
     setSelectedDay(parseInt(e.target.value))
   }
+
+  const constructImgURL = () => {
+
+  }
+
+  useEffect(() => {
+    constructImgURL()
+  },[selectedDay, selectedProduct, selectedArchiveDate, props.plotType])
 
   useEffect(() => {
     window.addEventListener('keydown', keyPressHandler)
@@ -96,11 +109,13 @@ const ImageDisplay = (props) => {
           <button className={`${styles.daySelectButton} ${selectedDay === 5 ? styles.selected : ''}`} onClick={handleDayChange} value={5}>Day 5</button>
         </div>
         :
-        null
+        <div>
+          <DatePicker selected={selectedArchiveDate} onChange={(date) => setSelectedArchiveDate(date)} />
+        </div>
       }
      
       <div className={styles.ImgContainer}>
-        <img className={styles.ImgElement} src={baseURL + selectedProduct.value + 'day' + selectedDay.toString() + '.png'}/>
+        <img className={styles.ImgElement} src={imgURL}/>
       </div>
     </div>
   )
