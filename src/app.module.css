@@ -1,0 +1,35 @@
+.TitleHeader {
+  margin: 0px 0px 10px 0px;
+}
+
+.SinglePlotContainer {
+  widt: 100%;
+}
+
+.MultiPlotContainer {
+  width: 50%;
+  float: left;
+}
+
+.PlotTypeRadioContainer {
+  padding-bottom: 10px;
+}
+
+.ComparisonToggleContainer {
+
+}
+
+.ComparisonToggleLabel {
+  font-weight: bold;
+  margin: 0px 0px 10px 0px;
+}
+
+.ComparisonToggleSwitch {
+
+}
+
+@media screen and (max-width: 600px) {
+  .MultiPlotContainer {
+    width: 100%;
+  }
+}
