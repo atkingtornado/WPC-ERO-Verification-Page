@@ -10,7 +10,7 @@ import styles from './ImageDisplay.module.css';
 import "react-datepicker/dist/react-datepicker.css"
 import 'react-medium-image-zoom/dist/styles.css'
 
-const baseURL = 'https://origin.wpc.ncep.noaa.gov/verification/ero_verif/images/'
+const baseURL = 'https://www.wpc.ncep.noaa.gov/verification/ero_verif/images/'
 
 const options = [
   {
@@ -208,7 +208,7 @@ const ImageDisplay = (props) => {
             <button className={`${styles.DaySelectButton} ${selectedDay === 2 ? styles.selected : ''}`} onClick={handleDayChange} value={2}>Day 2</button>
             <button className={`${styles.DaySelectButton} ${selectedDay === 3 ? styles.selected : ''}`} onClick={handleDayChange} value={3}>Day 3</button>
             { 
-              selectedProduct.value === 'ALL_CSUopUFVSv2022' || selectedProduct.value === 'ALL_CSUopv2022' ?
+              selectedProduct.value !== 'ALL_CSUopv2020' ? 
               <>
                <button className={`${styles.DaySelectButton} ${selectedDay === 4 ? styles.selected : ''}`} onClick={handleDayChange} value={4}>Day 4</button>
                <button className={`${styles.DaySelectButton} ${selectedDay === 5 ? styles.selected : ''}`} onClick={handleDayChange} value={5}>Day 5</button>
