@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faImage } from '@fortawesome/free-solid-svg-icons'
 
 import DatePicker from "react-datepicker";
 
@@ -74,11 +76,14 @@ const archiveOptions = options.slice(0, 2)
 
 
 const ImageDisplay = (props) => {
+  let defDate = new Date();
+  defDate.setDate(defDate.getDate() - 7);
 
   const [selectedProduct, setSelectedProduct] = useState(options[0].options[0]);
   const [selectedDay, setSelectedDay] = useState(1);
-  const [selectedArchiveDate, setSelectedArchiveDate] = useState((new Date()) - 1);
+  const [selectedArchiveDate, setSelectedArchiveDate] = useState(defDate);
   const [imgURL, setimgURL] = useState('')
+  const [errMsg, setErrMsg] = useState('')
 
   const keyPressHandler = ({ key }) => {
     if (props.plotType === 'current') {
@@ -138,8 +143,17 @@ const ImageDisplay = (props) => {
     return tmpURL
   }
 
+  const onImageLoad = () => {
+    setErrMsg('')
+  }
+
+  const onImageError = (e) => {
+    setErrMsg('No plot available for selected date & product')
+  }
+
   useEffect(() => {
     setimgURL(constructImgURL())
+    setErrMsg('')
   },[selectedDay, selectedProduct, selectedArchiveDate, props.plotType])
 
   useEffect(() => {
@@ -210,7 +224,14 @@ const ImageDisplay = (props) => {
       }
      
       <div className={styles.ImgContainer}>
-        <img className={styles.ImgElement} src={imgURL}/>
+        {errMsg !== '' ?
+          <>
+            <p className={styles.MissingImgText}>{errMsg}</p>
+            <FontAwesomeIcon className={styles.MissingImgIcon} icon={faImage} />
+          </>
+        :
+          <img className={styles.ImgElement} src={imgURL} onLoad={onImageLoad} onError={onImageError}/>
+        }
       </div>
     </div>
   )

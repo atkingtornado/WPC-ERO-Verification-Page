@@ -67,6 +67,15 @@
 	height: auto;
 }
 
+.MissingImgText {
+	color: red;
+	font-weight: bold;
+	font-size: 22px;
+}
+
+.MissingImgIcon {
+	font-size: 72px;
+}
 
 @media screen and (max-width: 600px) {
 	.ImgElement {
