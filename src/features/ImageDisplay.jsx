@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faImage } from '@fortawesome/free-solid-svg-icons'
-
 import DatePicker from "react-datepicker";
+import Zoom from 'react-medium-image-zoom'
+
 
 import styles from './ImageDisplay.module.css';
 import "react-datepicker/dist/react-datepicker.css"
+import 'react-medium-image-zoom/dist/styles.css'
 
 const baseURL = 'https://origin.wpc.ncep.noaa.gov/verification/ero_verif/images/'
 
@@ -148,7 +150,9 @@ const ImageDisplay = (props) => {
   }
 
   const onImageError = (e) => {
-    setErrMsg('No plot available for selected date & product')
+    if(props.plotType === "archive"){
+      setErrMsg('No plot available for selected date & product')
+    }
   }
 
   useEffect(() => {
@@ -230,7 +234,9 @@ const ImageDisplay = (props) => {
             <FontAwesomeIcon className={styles.MissingImgIcon} icon={faImage} />
           </>
         :
-          <img className={styles.ImgElement} src={imgURL} onLoad={onImageLoad} onError={onImageError}/>
+          <Zoom>
+            <img className={styles.ImgElement} src={imgURL} onLoad={onImageLoad} onError={onImageError}/>
+          </Zoom>
         }
       </div>
     </div>
