@@ -30,6 +30,12 @@ const options = [
     ]
   },
   {
+    label: 'MRMS',
+    options: [
+      { value: 'observed_24hr_precip', label: 'MRMS QPE' },
+    ]
+  },
+  {
     label: 'Bulk Error Statistics',
     options: [
       { value: 'ALL_issuancetime_BSandAuROC', label: 'BSS and AuROC by Issuance Time - Compared to Observations' },
@@ -74,7 +80,7 @@ const options = [
 
 ];
 
-const archiveOptions = options.slice(0, 2)
+var archiveOptions = options.slice(0, 3)
 
 
 const ImageDisplay = (props) => {
@@ -108,16 +114,26 @@ const ImageDisplay = (props) => {
 
   const constructImgURL = () => {
     let tmpURL = ''
+    let tmpSelectedProduct = selectedProduct.value
+
     if (props.plotType === 'current') {
       
-      let tmpSelectedProduct = selectedProduct.value
+      
       if (tmpSelectedProduct === 'ALL_EROwST4gFFG' || tmpSelectedProduct === 'ALL_ST4gFFG' || tmpSelectedProduct === 'ALL_EROwALL_PP' ||
         tmpSelectedProduct === 'ALL_CSUopUFVSv2022' || tmpSelectedProduct === 'ALL_CSUopv2022' || tmpSelectedProduct === 'ALL_CSUopv2020') {
 
         tmpSelectedProduct = tmpSelectedProduct + '_last'
       }
 
-      tmpURL = baseURL + tmpSelectedProduct + '_vday' + selectedDay.toString() + '.png'
+       if (tmpSelectedProduct === 'observed_24hr_precip') { 
+        let currDate = new Date();
+        let currDateStr = currDate.toISOString().split('T')[0].replaceAll('-','')
+        tmpURL = 'https://origin.wpc.ncep.noaa.gov/verification/mode/images_test/' + currDateStr + '/' + tmpSelectedProduct + '_valid_' +  currDateStr + '12_prelim.png'
+      } else {
+        tmpURL = baseURL + tmpSelectedProduct + '_vday' + selectedDay.toString() + '.png'
+      }
+
+      
 
     } else {
       let tmpStartDate = new Date(selectedArchiveDate)
@@ -127,7 +143,6 @@ const ImageDisplay = (props) => {
       let startDateStr = tmpStartDate.toISOString().split('T')[0].replaceAll('-','')
       let endDateStr = tmpEndDate.toISOString().split('T')[0].replaceAll('-','')
 
-      let tmpSelectedProduct = selectedProduct.value
       let tmpvhr = '12'
       if (tmpSelectedProduct === 'ALL_CSUopUFVSv2022' || tmpSelectedProduct === 'ALL_CSUopv2022' || tmpSelectedProduct === 'ALL_CSUopv2020') {
           tmpSelectedProduct = tmpSelectedProduct + 'wALL'
@@ -140,7 +155,12 @@ const ImageDisplay = (props) => {
           
       }
 
-      tmpURL = baseURL + 'daybyday/' + tmpSelectedProduct + '_' + startDateStr + '12_to_' + endDateStr + '12_vday' + selectedDay.toString() + '_vhr' + tmpvhr + '.png'
+      if (tmpSelectedProduct === 'observed_24hr_precip') { 
+        tmpURL = 'https://origin.wpc.ncep.noaa.gov/verification/mode/images_test/' + startDateStr + '/' + tmpSelectedProduct + '_valid_' +  startDateStr + '12_prelim.png'
+      } else {
+        tmpURL = baseURL + 'daybyday/' + tmpSelectedProduct + '_' + startDateStr + '12_to_' + endDateStr + '12_vday' + selectedDay.toString() + '_vhr' + tmpvhr + '.png'
+      }
+
     }
     return tmpURL
   }
@@ -187,36 +207,41 @@ const ImageDisplay = (props) => {
       </div>
       {
         props.plotType === 'current' ?
-        <div className={styles.DaySelectContainer}>
-          <button className={`${styles.DaySelectButton} ${selectedDay === 1 ? styles.selected : ''}`} onClick={handleDayChange} value={1}>Day 1</button>
-          <button className={`${styles.DaySelectButton} ${selectedDay === 2 ? styles.selected : ''}`} onClick={handleDayChange} value={2}>Day 2</button>
-          <button className={`${styles.DaySelectButton} ${selectedDay === 3 ? styles.selected : ''}`} onClick={handleDayChange} value={3}>Day 3</button>
-          { selectedProduct.value !== 'ALL_CSUopv2020' ? 
-            <>
-               <button className={`${styles.DaySelectButton} ${selectedDay === 4 ? styles.selected : ''}`} onClick={handleDayChange} value={4}>Day 4</button>
-               <button className={`${styles.DaySelectButton} ${selectedDay === 5 ? styles.selected : ''}`} onClick={handleDayChange} value={5}>Day 5</button>
-            </>
-          :
-            null
-          }
-          
-        </div>
+          selectedProduct.value !== 'observed_24hr_precip' ? 
+            <div className={styles.DaySelectContainer}>
+              <button className={`${styles.DaySelectButton} ${selectedDay === 1 ? styles.selected : ''}`} onClick={handleDayChange} value={1}>Day 1</button>
+              <button className={`${styles.DaySelectButton} ${selectedDay === 2 ? styles.selected : ''}`} onClick={handleDayChange} value={2}>Day 2</button>
+              <button className={`${styles.DaySelectButton} ${selectedDay === 3 ? styles.selected : ''}`} onClick={handleDayChange} value={3}>Day 3</button>
+              { selectedProduct.value !== 'ALL_CSUopv2020' ? 
+                <>
+                   <button className={`${styles.DaySelectButton} ${selectedDay === 4 ? styles.selected : ''}`} onClick={handleDayChange} value={4}>Day 4</button>
+                   <button className={`${styles.DaySelectButton} ${selectedDay === 5 ? styles.selected : ''}`} onClick={handleDayChange} value={5}>Day 5</button>
+                </>
+              :
+                null
+              }
+              
+            </div>
+            : null
         :
         <>
-          <div className={styles.DaySelectContainer}>
-            <button className={`${styles.DaySelectButton} ${selectedDay === 1 ? styles.selected : ''}`} onClick={handleDayChange} value={1}>Day 1</button>
-            <button className={`${styles.DaySelectButton} ${selectedDay === 2 ? styles.selected : ''}`} onClick={handleDayChange} value={2}>Day 2</button>
-            <button className={`${styles.DaySelectButton} ${selectedDay === 3 ? styles.selected : ''}`} onClick={handleDayChange} value={3}>Day 3</button>
-            { 
-              selectedProduct.value !== 'ALL_CSUopv2020' ? 
-              <>
-               <button className={`${styles.DaySelectButton} ${selectedDay === 4 ? styles.selected : ''}`} onClick={handleDayChange} value={4}>Day 4</button>
-               <button className={`${styles.DaySelectButton} ${selectedDay === 5 ? styles.selected : ''}`} onClick={handleDayChange} value={5}>Day 5</button>
-              </>
-              :
-              null
-            }
-          </div>
+          {selectedProduct.value !== 'observed_24hr_precip' ? 
+            <div className={styles.DaySelectContainer}>
+              <button className={`${styles.DaySelectButton} ${selectedDay === 1 ? styles.selected : ''}`} onClick={handleDayChange} value={1}>Day 1</button>
+              <button className={`${styles.DaySelectButton} ${selectedDay === 2 ? styles.selected : ''}`} onClick={handleDayChange} value={2}>Day 2</button>
+              <button className={`${styles.DaySelectButton} ${selectedDay === 3 ? styles.selected : ''}`} onClick={handleDayChange} value={3}>Day 3</button>
+              { 
+                selectedProduct.value !== 'ALL_CSUopv2020' ? 
+                <>
+                 <button className={`${styles.DaySelectButton} ${selectedDay === 4 ? styles.selected : ''}`} onClick={handleDayChange} value={4}>Day 4</button>
+                 <button className={`${styles.DaySelectButton} ${selectedDay === 5 ? styles.selected : ''}`} onClick={handleDayChange} value={5}>Day 5</button>
+                </>
+                :
+                null
+              }
+            </div>
+            : null
+          }
           <div className={styles.ArchiveDatePickerContainer}>
             <DatePicker 
               className={styles.ArchiveDatePicker}
