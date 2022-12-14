@@ -90,11 +90,11 @@ const ImageDisplay = (props) => {
   const [selectedProduct, setSelectedProduct] = useState(options[0].options[0]);
   const [selectedDay, setSelectedDay] = useState(1);
   const [selectedArchiveDate, setSelectedArchiveDate] = useState(defDate);
-  const [imgURL, setimgURL] = useState('')
+  const [imgURL, setimgURL] = useState(null)
   const [errMsg, setErrMsg] = useState('')
 
   const keyPressHandler = ({ key }) => {
-    if (props.plotType === 'current') {
+    // if (props.plotType === 'current') {
       if (key === "ArrowRight") {
         if (selectedDay < 5) {
           setSelectedDay(selectedDay+1)
@@ -105,7 +105,7 @@ const ImageDisplay = (props) => {
           setSelectedDay(selectedDay-1)
         }
       } 
-    }
+    // }
   }
 
   const handleDayChange = (e) => {
@@ -172,6 +172,11 @@ const ImageDisplay = (props) => {
   const onImageError = (e) => {
     if(props.plotType === "archive"){
       setErrMsg('No plot available for selected date & product')
+    } else {
+      let currDate = new Date();
+      let currDateStr = currDate.toISOString().split('T')[0].replaceAll('-','')
+
+      setErrMsg('No current (' + currDateStr + ') plot available for selected product')
     }
   }
 
