@@ -1,9 +1,9 @@
 .TitleHeader {
-  margin: 0px 0px 10px 0px;
+  margin: 0px 0px 20px 0px;
 }
 
 .SinglePlotContainer {
-  widt: 100%;
+  width: 100%;
 }
 
 .MultiPlotContainer {
@@ -11,21 +11,38 @@
   float: left;
 }
 
+.PlotOptionsContainer {
+  display: flex;
+  max-width: 600px;
+  margin: auto;
+}
+
 .PlotTypeRadioContainer {
-  padding-bottom: 10px;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  flex-direction: column;
+  border-right: 2px solid black;
+  padding-right: 20px;
 }
 
 .ComparisonToggleContainer {
-
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: left;
+  padding-left: 20px;
+  flex-direction: column;
 }
 
 .ComparisonToggleLabel {
   font-weight: bold;
-  margin: 0px 0px 10px 0px;
+  margin: 0px 0px 5px 0px;
 }
 
 .ComparisonToggleSwitch {
-
+/*  padding-left: 50px;*/
 }
 
 @media screen and (max-width: 600px) {

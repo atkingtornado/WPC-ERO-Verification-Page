@@ -248,6 +248,7 @@ const ImageDisplay = (props) => {
             : null
           }
           <div className={styles.ArchiveDatePickerContainer}>
+            <p className={styles.ArchiveDatePickerLabel}>Valid start date:</p>
             <DatePicker 
               className={styles.ArchiveDatePicker}
               selected={selectedArchiveDate} 
@@ -265,7 +266,7 @@ const ImageDisplay = (props) => {
           </>
         :
           <Zoom>
-            <img className={styles.ImgElement} src={imgURL} onLoad={onImageLoad} onError={onImageError}/>
+            <img className={`${styles.ImgElement} ${props.plotType === 'current' ? styles.ImgElementShort : styles.ImgElementTall}`} src={imgURL} onLoad={onImageLoad} onError={onImageError}/>
           </Zoom>
         }
       </div>

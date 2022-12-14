@@ -24,16 +24,21 @@ function App() {
       <div>
         <h1 className={styles.TitleHeader}>WPC ERO Verification</h1>
 
-        <div className={styles.PlotTypeRadioContainer}>
-          <input onChange={handlePlotTypeSwitch} type="radio" id="archive" name="type" value="archive" checked={plotType === 'archive'}/>
-          <label htmlFor="archive">Archive</label>
+        <div className={styles.PlotOptionsContainer}>
+          <div className={styles.PlotTypeRadioContainer}>
+            <p className={styles.ComparisonToggleLabel}>Plot Type:</p>
+            <div>
+              <input onChange={handlePlotTypeSwitch} type="radio" id="archive" name="type" value="archive" checked={plotType === 'archive'}/>
+              <label htmlFor="archive"><b>Archive</b></label>
 
-          <input onChange={handlePlotTypeSwitch} type="radio" id="current" name="type" value="current" checked={plotType === 'current'}/>
-          <label htmlFor="current">Current</label>
-        </div>
-        <div className={styles.ComparisonToggleContainer}>
-            <p className={styles.ComparisonToggleLabel}>Enable Comparison:</p>
-            <Switch className={styles.ComparisonToggleSwitch} onChange={handleToggleComparison} checked={comparisonToggled} />
+              <input onChange={handlePlotTypeSwitch} type="radio" id="current" name="type" value="current" checked={plotType === 'current'}/>
+              <label htmlFor="current"><b>Current</b></label>
+            </div>
+          </div>
+          <div className={styles.ComparisonToggleContainer}>
+              <p className={styles.ComparisonToggleLabel}>Enable Comparison:</p>
+              <Switch className={styles.ComparisonToggleSwitch} onChange={handleToggleComparison} checked={comparisonToggled} />
+          </div>
         </div>
 
 

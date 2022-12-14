@@ -41,6 +41,15 @@
 	width: 100%;
 	max-width: 600px;
 	padding: 20px;
+	display: flex;
+	align-items: center;
+}
+
+.ArchiveDatePickerLabel {
+	margin: 0px 10px 0px 0px;
+	padding: 0px;
+	font-weight: bold;
+	width: 160px;
 }
 
 .ArchiveDatePicker {
@@ -62,9 +71,17 @@
 .ImgElement {
 	display: block;
 	max-width: 100%;
-	max-height: calc(100vh - 370px);
+	max-height: calc(100vh - 340px);
 	width: auto;
 	height: auto;
+}
+
+.ImgElementShort {
+	max-height: calc(100vh - 270px);
+}
+
+.ImgElementTall {
+	max-height: calc(100vh - 340px);
 }
 
 .MissingImgText {
