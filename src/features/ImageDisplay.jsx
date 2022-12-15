@@ -30,12 +30,6 @@ const options = [
     ]
   },
   {
-    label: 'MRMS',
-    options: [
-      { value: 'observed_24hr_precip', label: 'MRMS QPE' },
-    ]
-  },
-  {
     label: 'Bulk Error Statistics',
     options: [
       { value: 'ALL_issuancetime_BSandAuROC', label: 'BSS and AuROC by Issuance Time - Compared to Observations' },
@@ -80,7 +74,13 @@ const options = [
 
 ];
 
-var archiveOptions = options.slice(0, 3)
+var archiveOptions = options.slice(0, 2)
+archiveOptions.push({
+    label: 'MRMS',
+    options: [
+      { value: 'observed_24hr_precip', label: 'MRMS QPE' },
+    ]
+})
 
 
 const ImageDisplay = (props) => {
@@ -125,14 +125,14 @@ const ImageDisplay = (props) => {
         tmpSelectedProduct = tmpSelectedProduct + '_last'
       }
 
-       if (tmpSelectedProduct === 'observed_24hr_precip') { 
-        let currDate = new Date();
-        let currDateStr = currDate.toISOString().split('T')[0].replaceAll('-','')
-        tmpURL = 'https://origin.wpc.ncep.noaa.gov/verification/mode/images_test/' + currDateStr + '/' + tmpSelectedProduct + '_valid_' +  currDateStr + '12_prelim.png'
-      } else {
-        tmpURL = baseURL + tmpSelectedProduct + '_vday' + selectedDay.toString() + '.png'
-      }
-
+      //  if (tmpSelectedProduct === 'observed_24hr_precip') { 
+      //   let currDate = new Date();
+      //   let currDateStr = currDate.toISOString().split('T')[0].replaceAll('-','')
+      //   tmpURL = 'https://origin.wpc.ncep.noaa.gov/verification/mode/images_test/' + currDateStr + '/' + tmpSelectedProduct + '_valid_' +  currDateStr + '12_prelim.png'
+      // } else {
+      //   tmpURL = baseURL + tmpSelectedProduct + '_vday' + selectedDay.toString() + '.png'
+      // }
+      tmpURL = baseURL + tmpSelectedProduct + '_vday' + selectedDay.toString() + '.png'
       
 
     } else {
@@ -156,7 +156,11 @@ const ImageDisplay = (props) => {
       }
 
       if (tmpSelectedProduct === 'observed_24hr_precip') { 
-        tmpURL = 'https://origin.wpc.ncep.noaa.gov/verification/mode/images_test/' + startDateStr + '/' + tmpSelectedProduct + '_valid_' +  startDateStr + '12_prelim.png'
+        let tmpQPEDate = new Date(selectedArchiveDate)
+        tmpQPEDate.setDate(tmpQPEDate.getDate() - 1);
+
+        let QPEDateStr = tmpQPEDate.toISOString().split('T')[0].replaceAll('-','')
+        tmpURL = 'https://origin.wpc.ncep.noaa.gov/verification/mode/images_test/' + endDateStr + '/' + tmpSelectedProduct + '_valid_' +  endDateStr + '12_prelim.png'
       } else {
         tmpURL = baseURL + 'daybyday/' + tmpSelectedProduct + '_' + startDateStr + '12_to_' + endDateStr + '12_vday' + selectedDay.toString() + '_vhr' + tmpvhr + '.png'
       }
