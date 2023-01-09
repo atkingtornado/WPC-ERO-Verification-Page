@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { NavBar } from "@atkingtornado/wpc-navbar-reactjs";
+
 import logo from './logo.svg';
 import './App.css';
 import styles from './app.module.css';
 
 import Switch from "react-switch";
+
 
 import ImageDisplay from './features/ImageDisplay'
 
@@ -21,6 +24,7 @@ function App() {
 
   return (
     <div className="App">
+      <NavBar/>
       <div>
         <h1 className={styles.TitleHeader}>WPC ERO Verification</h1>
 
