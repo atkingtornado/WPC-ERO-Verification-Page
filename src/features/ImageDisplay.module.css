@@ -71,18 +71,17 @@
 .ImgElement {
 	display: block;
 	max-width: 100%;
-	max-height: calc(100vh - 360px);
 	width: auto;
 	height: auto;
 }
 
 .ImgElementShort {
-	max-height: calc(100vh - 370px);
+	max-height: calc(100vh - 404px);
 	min-height: 200px;
 }
 
 .ImgElementTall {
-	max-height: calc(100vh - 440px);
+	max-height: calc(100vh - 474px);
 	min-height: 200px;
 }
 
