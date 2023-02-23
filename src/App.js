@@ -7,12 +7,13 @@ import styles from './app.module.css';
 
 import Switch from "react-switch";
 
-
-import ImageDisplay from './features/ImageDisplay'
+import ImageDisplay from './features/ImageDisplay';
+import MapDisplay from './features/MapDisplay';
 
 function App() {
   const [comparisonToggled, setComparisonToggled] = useState(false);
   const [plotType, setPlotType] = useState("current");
+  const [displayType, setDisplayType] = useState("static");
 
   const handleToggleComparison = () => {
     setComparisonToggled(!comparisonToggled)
@@ -22,40 +23,57 @@ function App() {
     setPlotType(e.target.value)
   }
 
+  const handleDisplayTypeSwitch = (e) => {
+    console.log(displayType === 'static' ? 'interactive' : 'static')
+    setDisplayType(displayType === 'static' ? 'interactive' : 'static')
+  }
+
   return (
     <div className="App">
       <NavBar/>
       <div>
         <h1 className={styles.TitleHeader}>WPC ERO Verification</h1>
 
-        <div className={styles.PlotOptionsContainer}>
-          <div className={styles.PlotTypeRadioContainer}>
-            <p className={styles.ComparisonToggleLabel}>Plot Type:</p>
-            <div>
-              <input onChange={handlePlotTypeSwitch} type="radio" id="archive" name="type" value="archive" checked={plotType === 'archive'}/>
-              <label htmlFor="archive"><b>Archive</b></label>
+        <div className={styles.DisplayTypeButtonContainer}>
+          <button className={styles.DisplayTypeButton} onClick={handleDisplayTypeSwitch}>{displayType === 'static' ? "Switch to Interactive View" : "Switch to Plot View"}</button>
+        </div>
 
-              <input onChange={handlePlotTypeSwitch} type="radio" id="current" name="type" value="current" checked={plotType === 'current'}/>
-              <label htmlFor="current"><b>Current</b></label>
+      { displayType === 'interactive' ?
+        <>
+          <MapDisplay/>
+        </>
+       :
+        <>
+         <div className={styles.PlotOptionsContainer}>
+            <div className={styles.PlotTypeRadioContainer}>
+              <p className={styles.ComparisonToggleLabel}>Plot Type:</p>
+              <div>
+                <input onChange={handlePlotTypeSwitch} type="radio" id="archive" name="type" value="archive" checked={plotType === 'archive'}/>
+                <label htmlFor="archive"><b>Archive</b></label>
+
+                <input onChange={handlePlotTypeSwitch} type="radio" id="current" name="type" value="current" checked={plotType === 'current'}/>
+                <label htmlFor="current"><b>Current</b></label>
+              </div>
+            </div>
+            <div className={styles.ComparisonToggleContainer}>
+                <p className={styles.ComparisonToggleLabel}>Enable Comparison:</p>
+                <Switch className={styles.ComparisonToggleSwitch} onChange={handleToggleComparison} checked={comparisonToggled} />
             </div>
           </div>
-          <div className={styles.ComparisonToggleContainer}>
-              <p className={styles.ComparisonToggleLabel}>Enable Comparison:</p>
-              <Switch className={styles.ComparisonToggleSwitch} onChange={handleToggleComparison} checked={comparisonToggled} />
-          </div>
-        </div>
 
 
-        <div className={comparisonToggled ? styles.MultiPlotContainer : styles.SinglePlotContainer}>
-          <ImageDisplay plotType={plotType}/>
-        </div>
-        { comparisonToggled ? 
-          <div className={styles.MultiPlotContainer}>
+          <div className={comparisonToggled ? styles.MultiPlotContainer : styles.SinglePlotContainer}>
             <ImageDisplay plotType={plotType}/>
           </div>
-          :
-          null
-        }
+          { comparisonToggled ? 
+            <div className={styles.MultiPlotContainer}>
+              <ImageDisplay plotType={plotType}/>
+            </div>
+            :
+            null
+          }
+        </>
+      }
 
 
       </div>

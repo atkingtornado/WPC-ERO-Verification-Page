@@ -1,0 +1,15 @@
+.MapDisplayContainer{
+		display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 20px;
+	height: calc(100vh - 253px);
+	min-height: 200px;
+}
+
+.ProductSelectContainer {
+	width: 100%;
+	max-width: 600px;
+	margin: 0px 0px 20px 0px;
+	text-align: left;
+}

@@ -33,7 +33,7 @@
 
 .DaySelectButton.selected {
 	background: #cdcdcd;
-	border-color: #2684ff;
+	border-color: #0058a6;
 	border-width: 3px;
 }
 
@@ -76,12 +76,12 @@
 }
 
 .ImgElementShort {
-	max-height: calc(100vh - 404px);
+	max-height: calc(100vh - 425px);
 	min-height: 200px;
 }
 
 .ImgElementTall {
-	max-height: calc(100vh - 474px);
+	max-height: calc(100vh - 500px);
 	min-height: 200px;
 }
 

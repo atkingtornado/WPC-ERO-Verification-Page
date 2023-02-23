@@ -1,5 +1,18 @@
 .TitleHeader {
-  margin: 20px 0px 10px 0px;
+  margin: 10px 0px 10px 0px;
+}
+
+.DisplayTypeButtonContainer {
+  margin: 10px;
+}
+
+.DisplayTypeButton {
+  background: #0058a6;
+  color: white;
+  border-radius: 3px;
+  padding:5px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 .SinglePlotContainer {
