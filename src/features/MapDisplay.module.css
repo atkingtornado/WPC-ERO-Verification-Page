@@ -7,9 +7,63 @@
 	min-height: 200px;
 }
 
+.DaySelectContainer {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  width: 100%;
+  max-width: 600px;
+  height: 50px;
+  margin-bottom: 10px;
+}
+
+.DaySelectButton {
+	cursor: pointer;
+	margin: 5px;
+	border-radius: 5px;
+	border-width: 1px;
+	border: solid;
+	height: 40px;
+}
+.DaySelectButton:focus {
+	outline: 0;
+}
+
+.DaySelectButton.selected {
+	background: #cdcdcd;
+	border-color: #0058a6;
+	border-width: 3px;
+}
+
 .ProductSelectContainer {
 	width: 100%;
 	max-width: 600px;
-	margin: 0px 0px 20px 0px;
+	margin: 0px 0px 0px 0px;
 	text-align: left;
+}
+
+.ArchiveDatePickerContainer {
+	width: 100%;
+	max-width: 600px;
+	padding: 20px;
+	display: flex;
+	align-items: center;
+}
+
+.ArchiveDatePickerLabel {
+	margin: 0px 10px 0px 0px;
+	padding: 0px;
+	font-weight: bold;
+	width: 160px;
+}
+
+.ArchiveDatePicker {
+	width: 100%;
+	padding: 5px;
+	-moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 16px;
 }
