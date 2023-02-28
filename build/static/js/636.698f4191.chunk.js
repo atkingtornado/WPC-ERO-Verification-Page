@@ -1,0 +1,2 @@
+(self.webpackChunkwpc_ero_verification_page=self.webpackChunkwpc_ero_verification_page||[]).push([[636],{1636:function(e,i){i.printMsg=function(){console.log("This is a message from the demo package")}}}]);
+//# sourceMappingURL=636.698f4191.chunk.js.map
