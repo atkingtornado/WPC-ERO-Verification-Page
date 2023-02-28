@@ -94,7 +94,7 @@ const ImageDisplay = (props) => {
   const [errMsg, setErrMsg] = useState('')
 
   const keyPressHandler = ({ key }) => {
-    // if (props.plotType === 'current') {
+    // if (props.archiveOrCurrent === 'current') {
       if (key === "ArrowRight") {
         if (selectedDay < 5) {
           setSelectedDay(selectedDay+1)
@@ -116,7 +116,7 @@ const ImageDisplay = (props) => {
     let tmpURL = ''
     let tmpSelectedProduct = selectedProduct.value
 
-    if (props.plotType === 'current') {
+    if (props.archiveOrCurrent === 'current') {
       
       
       if (tmpSelectedProduct === 'ALL_EROwST4gFFG' || tmpSelectedProduct === 'ALL_ST4gFFG' || tmpSelectedProduct === 'ALL_EROwALL_PP' ||
@@ -125,15 +125,7 @@ const ImageDisplay = (props) => {
         tmpSelectedProduct = tmpSelectedProduct + '_last'
       }
 
-      //  if (tmpSelectedProduct === 'observed_24hr_precip') { 
-      //   let currDate = new Date();
-      //   let currDateStr = currDate.toISOString().split('T')[0].replaceAll('-','')
-      //   tmpURL = 'https://origin.wpc.ncep.noaa.gov/verification/mode/images_test/' + currDateStr + '/' + tmpSelectedProduct + '_valid_' +  currDateStr + '12_prelim.png'
-      // } else {
-      //   tmpURL = baseURL + tmpSelectedProduct + '_vday' + selectedDay.toString() + '.png'
-      // }
       tmpURL = baseURL + tmpSelectedProduct + '_vday' + selectedDay.toString() + '.png'
-      
 
     } else {
       let tmpStartDate = new Date(selectedArchiveDate)
@@ -174,7 +166,7 @@ const ImageDisplay = (props) => {
   }
 
   const onImageError = (e) => {
-    if(props.plotType === "archive"){
+    if(props.archiveOrCurrent === "archive"){
       setErrMsg('No plot available for selected date & product')
     } else {
       let currDate = new Date();
@@ -187,7 +179,7 @@ const ImageDisplay = (props) => {
   useEffect(() => {
     setimgURL(constructImgURL())
     setErrMsg('')
-  },[selectedDay, selectedProduct, selectedArchiveDate, props.plotType])
+  },[selectedDay, selectedProduct, selectedArchiveDate, props.archiveOrCurrent])
 
   useEffect(() => {
     window.addEventListener('keydown', keyPressHandler)
@@ -210,12 +202,12 @@ const ImageDisplay = (props) => {
         <Select
           defaultValue={selectedProduct}
           onChange={setSelectedProduct}
-          options={props.plotType === 'current' ? options : archiveOptions}
+          options={props.archiveOrCurrent === 'current' ? options : archiveOptions}
           placeholder={'Select Product'}
         />
       </div>
       {
-        props.plotType === 'current' ?
+        props.archiveOrCurrent === 'current' ?
           selectedProduct.value !== 'observed_24hr_precip' ? 
             <div className={styles.DaySelectContainer}>
               <button className={`${styles.DaySelectButton} ${selectedDay === 1 ? styles.selected : ''}`} onClick={handleDayChange} value={1}>Day 1</button>
@@ -270,7 +262,7 @@ const ImageDisplay = (props) => {
           </>
         :
           <Zoom>
-            <img className={`${styles.ImgElement} ${props.plotType === 'current' ? styles.ImgElementShort : styles.ImgElementTall}`} src={imgURL} onLoad={onImageLoad} onError={onImageError}/>
+            <img className={`${styles.ImgElement} ${props.archiveOrCurrent === 'current' ? styles.ImgElementShort : styles.ImgElementTall}`} src={imgURL} onLoad={onImageLoad} onError={onImageError}/>
           </Zoom>
         }
       </div>

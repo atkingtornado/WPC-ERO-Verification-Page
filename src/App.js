@@ -12,15 +12,15 @@ import MapDisplay from './features/MapDisplay';
 
 function App() {
   const [comparisonToggled, setComparisonToggled] = useState(false);
-  const [plotType, setPlotType] = useState("current");
+  const [archiveOrCurrent, setArchiveOrCurrent] = useState("current");
   const [displayType, setDisplayType] = useState("static");
 
   const handleToggleComparison = () => {
     setComparisonToggled(!comparisonToggled)
   }
 
-  const handlePlotTypeSwitch = (e) => {
-    setPlotType(e.target.value)
+  const handleArchiveOrCurrentSwitch = (e) => {
+    setArchiveOrCurrent(e.target.value)
   }
 
   const handleDisplayTypeSwitch = (e) => {
@@ -38,36 +38,43 @@ function App() {
           <button className={styles.DisplayTypeButton} onClick={handleDisplayTypeSwitch}>{displayType === 'static' ? "Switch to Interactive View" : "Switch to Plot View"}</button>
         </div>
 
-      { displayType === 'interactive' ?
-        <>
-          <MapDisplay/>
-        </>
-       :
-        <>
-         <div className={styles.PlotOptionsContainer}>
+        <div className={styles.PlotOptionsContainer}>
             <div className={styles.PlotTypeRadioContainer}>
-              <p className={styles.ComparisonToggleLabel}>Plot Type:</p>
               <div>
-                <input onChange={handlePlotTypeSwitch} type="radio" id="archive" name="type" value="archive" checked={plotType === 'archive'}/>
+                <input onChange={handleArchiveOrCurrentSwitch} type="radio" id="archive" name="type" value="archive" checked={archiveOrCurrent === 'archive'}/>
                 <label htmlFor="archive"><b>Archive</b></label>
 
-                <input onChange={handlePlotTypeSwitch} type="radio" id="current" name="type" value="current" checked={plotType === 'current'}/>
+                <input onChange={handleArchiveOrCurrentSwitch} type="radio" id="current" name="type" value="current" checked={archiveOrCurrent === 'current'}/>
                 <label htmlFor="current"><b>Current</b></label>
               </div>
             </div>
             <div className={styles.ComparisonToggleContainer}>
-                <p className={styles.ComparisonToggleLabel}>Enable Comparison:</p>
-                <Switch className={styles.ComparisonToggleSwitch} onChange={handleToggleComparison} checked={comparisonToggled} />
+              <Switch className={styles.ComparisonToggleSwitch} onChange={handleToggleComparison} checked={comparisonToggled} />
+              <p className={styles.ComparisonToggleLabel}>Enable Comparison</p>  
             </div>
           </div>
 
-
+      { displayType === 'interactive' ?
+        <>
           <div className={comparisonToggled ? styles.MultiPlotContainer : styles.SinglePlotContainer}>
-            <ImageDisplay plotType={plotType}/>
+            <MapDisplay archiveOrCurrent={archiveOrCurrent}/>
           </div>
           { comparisonToggled ? 
             <div className={styles.MultiPlotContainer}>
-              <ImageDisplay plotType={plotType}/>
+              <MapDisplay archiveOrCurrent={archiveOrCurrent}/>
+            </div>
+            :
+            null
+          }
+        </>
+       :
+        <>
+          <div className={comparisonToggled ? styles.MultiPlotContainer : styles.SinglePlotContainer}>
+            <ImageDisplay archiveOrCurrent={archiveOrCurrent}/>
+          </div>
+          { comparisonToggled ? 
+            <div className={styles.MultiPlotContainer}>
+              <ImageDisplay archiveOrCurrent={archiveOrCurrent}/>
             </div>
             :
             null

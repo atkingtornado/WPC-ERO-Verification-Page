@@ -38,6 +38,8 @@
   flex-direction: column;
   border-right: 2px solid black;
   padding-right: 20px;
+  height: 28px;
+  line-height: 28px;
 }
 
 .ComparisonToggleContainer {
@@ -46,12 +48,14 @@
   align-items: flex-start;
   justify-content: left;
   padding-left: 20px;
-  flex-direction: column;
+  flex-direction: row;
+  height: 28px;
 }
 
 .ComparisonToggleLabel {
   font-weight: bold;
-  margin: 0px 0px 5px 0px;
+  margin: 0px 0px 0px 10px;
+  line-height: 28px;
 }
 
 .ComparisonToggleSwitch {
