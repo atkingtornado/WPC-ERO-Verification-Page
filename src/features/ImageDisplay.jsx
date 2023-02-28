@@ -190,7 +190,6 @@ const ImageDisplay = (props) => {
   },[selectedDay])
 
   useEffect(() => {
-    console.log(selectedProduct.value, selectedDay)
     if (!(selectedProduct.value === 'ALL_CSUopUFVSv2022' || selectedProduct.value === 'ALL_CSUopv2022') && selectedDay > 3) {
       setSelectedDay(3)
     }

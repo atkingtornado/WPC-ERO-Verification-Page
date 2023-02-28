@@ -24,7 +24,6 @@ function App() {
   }
 
   const handleDisplayTypeSwitch = (e) => {
-    console.log(displayType === 'static' ? 'interactive' : 'static')
     setDisplayType(displayType === 'static' ? 'interactive' : 'static')
   }
 

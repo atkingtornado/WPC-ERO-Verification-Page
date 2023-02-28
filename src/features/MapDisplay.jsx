@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import Select from 'react-select';
-import Map, {Source, Layer, useMap, MapProvider, FullscreenControl} from 'react-map-gl';
+import Map, {Source, Layer, useMap, MapProvider, FullscreenControl, useControl} from 'react-map-gl';
 import maplibregl from 'maplibre-gl';
 import DatePicker from 'react-datepicker';
 import LegendControl from 'mapboxgl-legend';
+import axios from 'axios'
 
 import styles from './MapDisplay.module.css';
 
@@ -16,6 +17,10 @@ const MapDisplay = (props) => {
 
 	const menuOptions = [
 		{
+			value: 'ALL_ST4gARI',
+			label: 'ST4 > ARI'
+		},
+		{
 			value: 'ALL_ST4gFFG',
 			label: 'ST4 > FFG'
 		},
@@ -26,12 +31,20 @@ const MapDisplay = (props) => {
 	]
 
 	const layerConf = {
+		'ALL_ST4gARI': {
+			id: 'ALL_ST4gARI',
+			type: 'circle',
+			paint: {
+				'circle-color': 'red',
+				'circle-opacity': 0.5
+			}
+		},
 		'ALL_ST4gFFG': {
 			id: 'ALL_ST4gFFG',
 			type: 'fill',
 			paint: {
 				'fill-color': 'blue',
-				'fill-opacity': 0.8
+				'fill-opacity': 0.5
 			}
 		},
 		'ALL_PP_ST4gFFG': {
@@ -39,29 +52,40 @@ const MapDisplay = (props) => {
 			type: 'fill',
 			paint: {
 				'fill-color': 'blue',
-				'fill-opacity': 0.8
+				'fill-opacity': 0.5
 			}
 		}
 	}
 
 	let defDate = new Date();
-  	// defDate.setDate(defDate.getDate() - 7);
+  	defDate.setDate(defDate.getDate() - 7);
 	const [selectedArchiveDate, setSelectedArchiveDate] = useState(defDate);
 	const [allLayerData, setAllLayerData] = useState([]);
 	const [selectedDay, setSelectedDay] = useState(1);
 	const [selectedProducts, setSelectedProducts] = useState(null);
 
-	const baseURL = 'https://origin.wpc.ncep.noaa.gov/aking/ero_verif/geojsons/'
+	const mapRef = useRef();
+
+	const baseURL = 'https://origin.wpc.ncep.noaa.gov/aking/ero_verif/geojsons/' //'http://localhost:3001/'
 
 	const legend = new LegendControl({
-		layers: ['data', 'data2'],
+		layers: ['ALL_ST4gFFG'],
 		toggler: true
 	});
 
-	const constructGeojsonURL = (layerName) => {
+	const LegendControlElement = (props) => {
+	  useControl(() => legend, {
+	    position: 'top-left'
+	  });
+
+	  return null;
+	}
+	
+
+	const constructGeojsonURL = (layerName, day) => {
 		let url = baseURL + layerName
 		if (props.archiveOrCurrent === 'current'){
-			url += '_last_vday' + selectedDay.toString() + '.geojson'
+			url += '_last_vday' + day + '.geojson'
 		} else {
 
 		}
@@ -69,26 +93,49 @@ const MapDisplay = (props) => {
 		return url
 	}
 	
-	const fetchGeojsonData = (layerName) => {
-		let url = constructGeojsonURL(layerName)
+	const fetchGeojsonData = async (layerName) => {
+		let requests = []
+		for(let i=1; i<6; i++){
+			let url = constructGeojsonURL(layerName, i.toString())
+			requests.push(axios.get(url))
+		}
 
-		fetch(url)
-	      .then(resp => resp.json())
-	      .then((json) => {return(json)})
-	      .catch(err => console.error('Could not load data', err)); // eslint-disable-line
+		const response = await Promise.allSettled(requests)
 
+		return response
 	}
 
 	const handleLayerChange = (layersArr, actionObj) => {
 		if (actionObj.action === 'select-option') {
-			let geojsonData = fetchGeojsonData(actionObj.option.value)
-			
-			let tmpAllLayerData = [...allLayerData]
-			tmpAllLayerData.push({
-				'layer_name':actionObj.option.value,
-				'data': geojsonData
-			})
 
+			let geojsonDataArr = []
+
+			fetchGeojsonData(actionObj.option.value)
+			.then((resultArr) => {
+				for(let res of resultArr) {
+					if(res.status === 'fulfilled'){
+						geojsonDataArr.push(res.value.data)
+					} else {
+						geojsonDataArr.push(null)
+					}
+				}
+				let tmpAllLayerData = [...allLayerData]
+				tmpAllLayerData.push({
+					'layer_name':actionObj.option.value,
+					'data': geojsonDataArr
+				})
+
+				setAllLayerData(tmpAllLayerData)
+
+			}).catch((e) => {
+				console.log(e)
+			})
+			
+			
+		} else if(actionObj.action === 'remove-value') {
+			let tmpAllLayerData = [...allLayerData]
+			tmpAllLayerData.splice(tmpAllLayerData.findIndex(({layer_name}) => layer_name == actionObj.removedValue.value), 1);
+			legend.removeLayers([actionObj.removedValue.value])
 			setAllLayerData(tmpAllLayerData)
 		}
 	}
@@ -97,19 +144,9 @@ const MapDisplay = (props) => {
 	    setSelectedDay(parseInt(e.target.value))
 	}
 
-	// useEffect(() => {
-	//     /* global fetch */
-	//     fetch(
-	//       'https://origin.wpc.ncep.noaa.gov/aking/ero_verif/geojsons/ALL_ST4gFFG_last_vday1.geojson'
-	//     )
-	//       .then(resp => resp.json())
-	//       .then(json => setAllData(json))
-	//       .catch(err => console.error('Could not load data', err)); // eslint-disable-line
-	// }, [selectedProducts]);	
-
-
-
-
+	const onMapLoad = () => {
+		mapRef.current.getMap().addControl(legend, 'bottom-left');
+	}
 
 	return (
 		<div className={`${styles.MapDisplayContainer} ${props.archiveOrCurrent === 'current' ? styles.MapDisplayContainerShort : styles.MapDisplayContainerTall}`}>
@@ -143,9 +180,10 @@ const MapDisplay = (props) => {
 		        null
 	    	}
 
-            <MapProvider>
-            	<MapLegend legend={legend}/>
+             <MapProvider>
 			    <Map
+			      ref={mapRef}
+			      onLoad={onMapLoad}
 			      id="map"
 			      mapLib={maplibregl}
 			      initialViewState={{
@@ -157,9 +195,12 @@ const MapDisplay = (props) => {
 			      mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
 			    >
 			    	<FullscreenControl />
+			    	<LegendControlElement/>
+			    	
 			    	{ allLayerData.map((layer) => {
+			    		console.log(layer)
 			    		return (
-			    			<Source id={layer.layer_name} type="geojson" data={layer.data}>
+							<Source key={layer.layer_name+selectedDay} id={layer.layer_name+selectedDay} type="geojson" data={layer.data[selectedDay-1]}>
 						      <Layer {...layerConf[layer.layer_name]} />
 						    </Source>
 			    		)
@@ -167,6 +208,7 @@ const MapDisplay = (props) => {
 
 			    	}
 			    </Map>
+			    {/*<MapLegend legend={legend}/>*/}
 			</MapProvider>
 	    </div>
 	);
@@ -175,13 +217,14 @@ const MapDisplay = (props) => {
 const MapLegend = (props) => {
 	const {map} = useMap();
 
+	console.log(map)
 
-	if (map !== undefined) {
-		console.log("HERE")
+	if (map !== undefined && props.legend._map === undefined) {
+		console.log("here")
 		map.addControl(props.legend, 'bottom-left');
 	}
 	
-	return(<></>)
+	return(null)
 }
 
 export default MapDisplay;
