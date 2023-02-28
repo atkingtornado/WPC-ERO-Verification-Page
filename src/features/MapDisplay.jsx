@@ -17,20 +17,28 @@ const MapDisplay = (props) => {
 
 	const menuOptions = [
 		{
+			value: 'ALL_ERO',
+			label: 'ERO'
+		},
+		{
 			value: 'ALL_ST4gARI',
 			label: 'ST4 > ARI'
 		},
 		{
 			value: 'ALL_ST4gFFG',
 			label: 'ST4 > FFG'
-		},
-		{
-			value: 'ALL_PP_ST4gFFG',
-			label: 'ST4 > FFG - Practically Perfect'
 		}
 	]
 
 	const layerConf = {
+		'ERO': {
+			id: 'ALL_ST4gFFG',
+			type: 'fill',
+			paint: {
+				'fill-color': 'green',
+				'fill-opacity': 0.5
+			}
+		},
 		'ALL_ST4gARI': {
 			id: 'ALL_ST4gARI',
 			type: 'circle',
@@ -41,14 +49,6 @@ const MapDisplay = (props) => {
 		},
 		'ALL_ST4gFFG': {
 			id: 'ALL_ST4gFFG',
-			type: 'fill',
-			paint: {
-				'fill-color': 'blue',
-				'fill-opacity': 0.5
-			}
-		},
-		'ALL_PP_ST4gFFG': {
-			id: 'ALL_PP_ST4gFFG',
 			type: 'fill',
 			paint: {
 				'fill-color': 'blue',
@@ -69,13 +69,13 @@ const MapDisplay = (props) => {
 	const baseURL = 'https://origin.wpc.ncep.noaa.gov/aking/ero_verif/geojsons/' //'http://localhost:3001/'
 
 	const legend = new LegendControl({
-		layers: ['ALL_ST4gFFG'],
+		layers: Object.keys(layerConf),
 		toggler: true
 	});
 
 	const LegendControlElement = (props) => {
 	  useControl(() => legend, {
-	    position: 'top-left'
+	    position: 'bottom-left'
 	  });
 
 	  return null;
@@ -106,8 +106,8 @@ const MapDisplay = (props) => {
 	}
 
 	const handleLayerChange = (layersArr, actionObj) => {
+		console.log(actionObj)
 		if (actionObj.action === 'select-option') {
-
 			let geojsonDataArr = []
 
 			fetchGeojsonData(actionObj.option.value)
@@ -122,6 +122,7 @@ const MapDisplay = (props) => {
 				let tmpAllLayerData = [...allLayerData]
 				tmpAllLayerData.push({
 					'layer_name':actionObj.option.value,
+					'label': actionObj.option.label,
 					'data': geojsonDataArr
 				})
 
@@ -130,13 +131,12 @@ const MapDisplay = (props) => {
 			}).catch((e) => {
 				console.log(e)
 			})
-			
-			
 		} else if(actionObj.action === 'remove-value') {
 			let tmpAllLayerData = [...allLayerData]
 			tmpAllLayerData.splice(tmpAllLayerData.findIndex(({layer_name}) => layer_name == actionObj.removedValue.value), 1);
-			legend.removeLayers([actionObj.removedValue.value])
 			setAllLayerData(tmpAllLayerData)
+		} else if(actionObj.action === 'clear') {
+			setAllLayerData([])
 		}
 	}
 
@@ -156,7 +156,7 @@ const MapDisplay = (props) => {
 		        	onChange={handleLayerChange}
 		            isMulti
 		            closeMenuOnSelect={false}
-		            placeholder={'Add Layers to Map...'}
+		            placeholder={'Select layers to add to map...'}
 		        />
 		    </div>
 
@@ -201,7 +201,7 @@ const MapDisplay = (props) => {
 			    		console.log(layer)
 			    		return (
 							<Source key={layer.layer_name+selectedDay} id={layer.layer_name+selectedDay} type="geojson" data={layer.data[selectedDay-1]}>
-						      <Layer {...layerConf[layer.layer_name]} />
+						      <Layer {...layerConf[layer.layer_name]} metadata={{name: layer.label}}/>
 						    </Source>
 			    		)
 			    	})
