@@ -32,11 +32,11 @@ const MapDisplay = (props) => {
 
 	const layerConf = {
 		'ERO': {
-			id: 'ALL_ST4gFFG',
-			type: 'fill',
+			id: 'ERO',
+			type: 'line',
 			paint: {
-				'fill-color': 'green',
-				'fill-opacity': 0.5
+				'line-color': 'green',
+				'line-opacity': 0.5
 			}
 		},
 		'ALL_ST4gARI': {
