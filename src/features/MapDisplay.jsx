@@ -31,8 +31,8 @@ const MapDisplay = (props) => {
 	]
 
 	const layerConf = {
-		'ERO': {
-			id: 'ERO',
+		'ALL_ERO': {
+			id: 'ALL_ERO',
 			type: 'line',
 			paint: {
 				'line-color': 'green',
