@@ -106,7 +106,7 @@ const MapDisplay = (props) => {
 	}
 
 	const handleLayerChange = (layersArr, actionObj) => {
-		console.log(actionObj)
+		setSelectedProducts(layersArr)
 		if (actionObj.action === 'select-option') {
 			let geojsonDataArr = []
 
@@ -141,6 +141,7 @@ const MapDisplay = (props) => {
 	}
 
 	const handleDayChange = (e) => {
+		setAllLayerData([])
 	    setSelectedDay(parseInt(e.target.value))
 	}
 
@@ -148,10 +149,17 @@ const MapDisplay = (props) => {
 		mapRef.current.getMap().addControl(legend, 'bottom-left');
 	}
 
+	useEffect(() => {
+		console.log(props.archiveOrCurrent)
+		setAllLayerData([])
+		setSelectedProducts(null)
+	}, [props.archiveOrCurrent])
+
 	return (
 		<div className={`${styles.MapDisplayContainer} ${props.archiveOrCurrent === 'current' ? styles.MapDisplayContainerShort : styles.MapDisplayContainerTall}`}>
 			<div className={styles.ProductSelectContainer}>
 		        <Select
+		        	value={selectedProducts}
 		        	options={menuOptions}
 		        	onChange={handleLayerChange}
 		            isMulti
@@ -198,7 +206,6 @@ const MapDisplay = (props) => {
 			    	<LegendControlElement/>
 			    	
 			    	{ allLayerData.map((layer) => {
-			    		console.log(layer)
 			    		return (
 							<Source key={layer.layer_name+selectedDay} id={layer.layer_name+selectedDay} type="geojson" data={layer.data[selectedDay-1]}>
 						      <Layer {...layerConf[layer.layer_name]} metadata={{name: layer.label}}/>
