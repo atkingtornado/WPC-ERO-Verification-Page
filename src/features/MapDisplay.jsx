@@ -149,8 +149,13 @@ const MapDisplay = (props) => {
 	}
 
 	const handleDayChange = (e) => {
-		setAllLayerData([])
 	    setSelectedDay(parseInt(e.target.value))
+	}
+
+	const handleDateChange = (date) => {
+		setSelectedArchiveDate(date)
+		setAllLayerData([])
+		setSelectedProducts(null)
 	}
 
 	const onMapLoad = () => {
@@ -188,7 +193,7 @@ const MapDisplay = (props) => {
 		            <DatePicker 
 		              className={styles.ArchiveDatePicker}
 		              selected={selectedArchiveDate} 
-		              onChange={(date) => setSelectedArchiveDate(date)} 
+		              onChange={handleDateChange} 
 		              />
 		        </div>
 		        :
