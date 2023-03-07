@@ -83,11 +83,19 @@ const MapDisplay = (props) => {
 	
 
 	const constructGeojsonURL = (layerName, day) => {
-		let url = baseURL + layerName
+		let url = baseURL
 		if (props.archiveOrCurrent === 'current'){
-			url += '_last_vday' + day + '.geojson'
+			url += layerName + '_last_vday' + day + '.geojson'
 		} else {
+			let tmpvhr = '12'
+			let tmpStartDate = new Date(selectedArchiveDate)
+		    let tmpEndDate = new Date(selectedArchiveDate)
+		    tmpEndDate.setDate(tmpEndDate.getDate() + 1);
 
+		    let startDateStr = tmpStartDate.toISOString().split('T')[0].replaceAll('-','')
+		    let endDateStr = tmpEndDate.toISOString().split('T')[0].replaceAll('-','')
+
+		    url += 'daybyday/' + layerName + '_' + startDateStr + '12_to_' + endDateStr + '12_vday' + day + '_vhr' + tmpvhr + '.geojson'
 		}
 		
 		return url
@@ -150,7 +158,6 @@ const MapDisplay = (props) => {
 	}
 
 	useEffect(() => {
-		console.log(props.archiveOrCurrent)
 		setAllLayerData([])
 		setSelectedProducts(null)
 	}, [props.archiveOrCurrent])
