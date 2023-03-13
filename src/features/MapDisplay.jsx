@@ -66,7 +66,7 @@ const MapDisplay = (props) => {
 
 	const mapRef = useRef();
 
-	const baseURL = 'https://origin.wpc.ncep.noaa.gov/aking/ero_verif/geojsons/' //'http://localhost:3001/'
+	const baseURL = 'https://origin.wpc.ncep.noaa.gov/aking/ero_verif/geojsons/' //'http://localhost:3001/
 
 	const legend = new LegendControl({
 		layers: Object.keys(layerConf),
@@ -113,32 +113,40 @@ const MapDisplay = (props) => {
 		return response
 	}
 
+	const addLayerToMap = (layerName, layerLabel, layerDataArr) => {
+		let geojsonDataArr = []
+		let tmpAllLayerData = layerDataArr
+
+		console.log(allLayerData, tmpAllLayerData)
+
+		fetchGeojsonData(layerName)
+		.then((resultArr) => {
+			for(let res of resultArr) {
+				if(res.status === 'fulfilled'){
+					geojsonDataArr.push(res.value.data)
+				} else {
+					geojsonDataArr.push(null)
+				}
+			}
+			
+			tmpAllLayerData.push({
+				'layer_name':layerName,
+				'label': layerLabel,
+				'data': geojsonDataArr
+			})
+
+			setAllLayerData(tmpAllLayerData)
+
+		}).catch((e) => {
+			console.log(e)
+		})
+	}
+
 	const handleLayerChange = (layersArr, actionObj) => {
 		setSelectedProducts(layersArr)
+
 		if (actionObj.action === 'select-option') {
-			let geojsonDataArr = []
-
-			fetchGeojsonData(actionObj.option.value)
-			.then((resultArr) => {
-				for(let res of resultArr) {
-					if(res.status === 'fulfilled'){
-						geojsonDataArr.push(res.value.data)
-					} else {
-						geojsonDataArr.push(null)
-					}
-				}
-				let tmpAllLayerData = [...allLayerData]
-				tmpAllLayerData.push({
-					'layer_name':actionObj.option.value,
-					'label': actionObj.option.label,
-					'data': geojsonDataArr
-				})
-
-				setAllLayerData(tmpAllLayerData)
-
-			}).catch((e) => {
-				console.log(e)
-			})
+			addLayerToMap(actionObj.option.value, actionObj.option.label, allLayerData)
 		} else if(actionObj.action === 'remove-value') {
 			let tmpAllLayerData = [...allLayerData]
 			tmpAllLayerData.splice(tmpAllLayerData.findIndex(({layer_name}) => layer_name == actionObj.removedValue.value), 1);
@@ -155,7 +163,13 @@ const MapDisplay = (props) => {
 	const handleDateChange = (date) => {
 		setSelectedArchiveDate(date)
 		setAllLayerData([])
-		setSelectedProducts(null)
+
+		if (selectedProducts !== null) {
+			for (let product of selectedProducts) {
+				addLayerToMap(product.value, product.label, [])
+			}
+		}
+		
 	}
 
 	const onMapLoad = () => {
