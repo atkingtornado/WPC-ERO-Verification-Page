@@ -113,12 +113,9 @@ const MapDisplay = (props) => {
 		return response
 	}
 
-	const addLayerToMap = (layerName, layerLabel, layerDataArr) => {
+	const addLayerToMap = (layerName, layerLabel) => {
 		let geojsonDataArr = []
-		let tmpAllLayerData = layerDataArr
-
-		console.log(allLayerData, tmpAllLayerData)
-
+		let tmpAllLayerData = [...allLayerData]
 		fetchGeojsonData(layerName)
 		.then((resultArr) => {
 			for(let res of resultArr) {
@@ -128,7 +125,6 @@ const MapDisplay = (props) => {
 					geojsonDataArr.push(null)
 				}
 			}
-			
 			tmpAllLayerData.push({
 				'layer_name':layerName,
 				'label': layerLabel,
@@ -144,9 +140,8 @@ const MapDisplay = (props) => {
 
 	const handleLayerChange = (layersArr, actionObj) => {
 		setSelectedProducts(layersArr)
-
 		if (actionObj.action === 'select-option') {
-			addLayerToMap(actionObj.option.value, actionObj.option.label, allLayerData)
+			addLayerToMap(actionObj.option.value, actionObj.option.label)
 		} else if(actionObj.action === 'remove-value') {
 			let tmpAllLayerData = [...allLayerData]
 			tmpAllLayerData.splice(tmpAllLayerData.findIndex(({layer_name}) => layer_name == actionObj.removedValue.value), 1);
@@ -165,11 +160,40 @@ const MapDisplay = (props) => {
 		setAllLayerData([])
 
 		if (selectedProducts !== null) {
+			let requests = []
 			for (let product of selectedProducts) {
-				addLayerToMap(product.value, product.label, [])
+				requests.push(fetchGeojsonData(product.value))
 			}
+
+			
+			let tmpAllLayerData = []
+			Promise.allSettled(requests).then((resultArr) => {
+				for(let i=0; i<resultArr.length; i++) {
+					let res = resultArr[i]
+					let geojsonDataArr = []
+
+					if(res.status === 'fulfilled'){
+						for(let pRes of res.value) {
+							if(pRes.status === 'fulfilled'){
+								geojsonDataArr.push(pRes.value.data)
+							} else {
+								geojsonDataArr.push(null)
+							}
+						}
+					} else {
+						geojsonDataArr = [null, null, null, null, null]
+					}
+
+
+					tmpAllLayerData.push({
+						'layer_name':selectedProducts[i].value,
+						'label': selectedProducts[i].label,
+						'data': geojsonDataArr
+					})
+				}
+				setAllLayerData(tmpAllLayerData)
+			})
 		}
-		
 	}
 
 	const onMapLoad = () => {
