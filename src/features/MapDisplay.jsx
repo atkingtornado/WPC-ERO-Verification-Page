@@ -66,7 +66,8 @@ const MapDisplay = (props) => {
 
 	const mapRef = useRef();
 
-	const baseURL = 'https://origin.wpc.ncep.noaa.gov/aking/ero_verif/geojsons/' //'http://localhost:3001/
+	// const baseURL = 'https://origin.wpc.ncep.noaa.gov/aking/ero_verif/geojsons/'
+	const baseURL = 'http://localhost:3001/'
 
 	const legend = new LegendControl({
 		layers: Object.keys(layerConf),
@@ -156,16 +157,59 @@ const MapDisplay = (props) => {
 	}
 
 	const handleDateChange = (date) => {
-		setSelectedArchiveDate(date)
 		setAllLayerData([])
+		setSelectedArchiveDate(date)
 
+		// setAllLayerData([])
+
+		// if (selectedProducts !== null) {
+		// 	let requests = []
+		// 	for (let product of selectedProducts) {
+		// 		requests.push(fetchGeojsonData(product.value))
+		// 	}
+
+			
+		// 	let tmpAllLayerData = []
+		// 	console.log(selectedArchiveDate)
+		// 	Promise.allSettled(requests).then((resultArr) => {
+		// 		for(let i=0; i<resultArr.length; i++) {
+		// 			let res = resultArr[i]
+		// 			let geojsonDataArr = []
+
+		// 			if(res.status === 'fulfilled'){
+		// 				for(let pRes of res.value) {
+		// 					if(pRes.status === 'fulfilled'){
+		// 						geojsonDataArr.push(pRes.value.data)
+		// 					} else {
+		// 						geojsonDataArr.push(null)
+		// 					}
+		// 				}
+		// 			} else {
+		// 				geojsonDataArr = [null, null, null, null, null]
+		// 			}
+
+
+		// 			tmpAllLayerData.push({
+		// 				'layer_name':selectedProducts[i].value,
+		// 				'label': selectedProducts[i].label,
+		// 				'data': geojsonDataArr
+		// 			})
+		// 		}
+		// 		setAllLayerData(tmpAllLayerData)
+		// 	})
+		//}
+	}
+
+	const onMapLoad = () => {
+		mapRef.current.getMap().addControl(legend, 'bottom-left');
+	}
+
+	useEffect(() => {
 		if (selectedProducts !== null) {
 			let requests = []
 			for (let product of selectedProducts) {
 				requests.push(fetchGeojsonData(product.value))
 			}
-
-			
 			let tmpAllLayerData = []
 			Promise.allSettled(requests).then((resultArr) => {
 				for(let i=0; i<resultArr.length; i++) {
@@ -194,11 +238,7 @@ const MapDisplay = (props) => {
 				setAllLayerData(tmpAllLayerData)
 			})
 		}
-	}
-
-	const onMapLoad = () => {
-		mapRef.current.getMap().addControl(legend, 'bottom-left');
-	}
+	}, [selectedArchiveDate])
 
 	useEffect(() => {
 		setAllLayerData([])
