@@ -35,7 +35,19 @@ const MapDisplay = (props) => {
 			id: 'ALL_ERO',
 			type: 'line',
 			paint: {
-				'line-color': 'green',
+				'line-color': [
+					'match',
+					['get', 'title'],
+					'MRGL',
+					'green',
+					'SLGT',
+					'orange',
+					'MDT',
+					'maroon',
+					'HIGH',
+					'magenta',
+					/* other */ 'black'
+				],
 				'line-opacity': 0.5
 			}
 		},
@@ -159,45 +171,6 @@ const MapDisplay = (props) => {
 	const handleDateChange = (date) => {
 		setAllLayerData([])
 		setSelectedArchiveDate(date)
-
-		// setAllLayerData([])
-
-		// if (selectedProducts !== null) {
-		// 	let requests = []
-		// 	for (let product of selectedProducts) {
-		// 		requests.push(fetchGeojsonData(product.value))
-		// 	}
-
-			
-		// 	let tmpAllLayerData = []
-		// 	console.log(selectedArchiveDate)
-		// 	Promise.allSettled(requests).then((resultArr) => {
-		// 		for(let i=0; i<resultArr.length; i++) {
-		// 			let res = resultArr[i]
-		// 			let geojsonDataArr = []
-
-		// 			if(res.status === 'fulfilled'){
-		// 				for(let pRes of res.value) {
-		// 					if(pRes.status === 'fulfilled'){
-		// 						geojsonDataArr.push(pRes.value.data)
-		// 					} else {
-		// 						geojsonDataArr.push(null)
-		// 					}
-		// 				}
-		// 			} else {
-		// 				geojsonDataArr = [null, null, null, null, null]
-		// 			}
-
-
-		// 			tmpAllLayerData.push({
-		// 				'layer_name':selectedProducts[i].value,
-		// 				'label': selectedProducts[i].label,
-		// 				'data': geojsonDataArr
-		// 			})
-		// 		}
-		// 		setAllLayerData(tmpAllLayerData)
-		// 	})
-		//}
 	}
 
 	const onMapLoad = () => {
@@ -298,7 +271,7 @@ const MapDisplay = (props) => {
 			    	{ allLayerData.map((layer) => {
 			    		return (
 							<Source key={layer.layer_name+selectedDay} id={layer.layer_name+selectedDay} type="geojson" data={layer.data[selectedDay-1]}>
-						      <Layer {...layerConf[layer.layer_name]} metadata={{name: layer.label}}/>
+						      <Layer {...layerConf[layer.layer_name]} metadata={{name: layer.label, labels:{other:false}}}/>
 						    </Source>
 			    		)
 			    	})
