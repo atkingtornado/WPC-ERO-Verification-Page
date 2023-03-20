@@ -14,6 +14,12 @@ function App() {
   const [comparisonToggled, setComparisonToggled] = useState(false);
   const [archiveOrCurrent, setArchiveOrCurrent] = useState("current");
   const [displayType, setDisplayType] = useState("static");
+  const [mapViewState, setMapViewState] = useState({
+      longitude: -98.4,
+      latitude: 39.5,
+      zoom: 3
+  });
+
 
   const handleToggleComparison = () => {
     setComparisonToggled(!comparisonToggled)
@@ -56,11 +62,11 @@ function App() {
       { displayType === 'interactive' ?
         <>
           <div className={comparisonToggled ? styles.MultiPlotContainer : styles.SinglePlotContainer}>
-            <MapDisplay archiveOrCurrent={archiveOrCurrent}/>
+            <MapDisplay comparisonToggled={comparisonToggled} mapViewState={mapViewState} setMapViewState={setMapViewState} archiveOrCurrent={archiveOrCurrent}/>
           </div>
           { comparisonToggled ? 
             <div className={styles.MultiPlotContainer}>
-              <MapDisplay archiveOrCurrent={archiveOrCurrent}/>
+              <MapDisplay comparisonToggled={comparisonToggled} mapViewState={mapViewState} setMapViewState={setMapViewState} archiveOrCurrent={archiveOrCurrent}/>
             </div>
             :
             null
