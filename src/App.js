@@ -62,11 +62,11 @@ function App() {
       { displayType === 'interactive' ?
         <>
           <div className={comparisonToggled ? styles.MultiPlotContainer : styles.SinglePlotContainer}>
-            <MapDisplay comparisonToggled={comparisonToggled} mapViewState={mapViewState} setMapViewState={setMapViewState} archiveOrCurrent={archiveOrCurrent}/>
+            <MapDisplay mapID={'map1'} comparisonToggled={comparisonToggled} mapViewState={mapViewState} setMapViewState={setMapViewState} archiveOrCurrent={archiveOrCurrent}/>
           </div>
           { comparisonToggled ? 
             <div className={styles.MultiPlotContainer}>
-              <MapDisplay comparisonToggled={comparisonToggled} mapViewState={mapViewState} setMapViewState={setMapViewState} archiveOrCurrent={archiveOrCurrent}/>
+              <MapDisplay mapID={'map2'} comparisonToggled={comparisonToggled} mapViewState={mapViewState} setMapViewState={setMapViewState} archiveOrCurrent={archiveOrCurrent}/>
             </div>
             :
             null

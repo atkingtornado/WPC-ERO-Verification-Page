@@ -13,26 +13,97 @@ import 'mapboxgl-legend/dist/style.css';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 
-const MapDisplay = (props) => {
+const menuOptions = [
+    {
+        value: 'ALL_ERO',
+        label: 'ERO'
+    },
+    {
+        value: 'ALL_ST4gARI',
+        label: 'ST4 > ARI'
+    },
+    {
+        value: 'ALL_ST4gFFG',
+        label: 'ST4 > FFG'
+    },
+    {
+        value: 'ALL_CSUopv2020',
+        label: 'CSUopv2020'
+    },
+    {
+        value: 'ALL_CSUopv2022',
+        label: 'CSUopv2022'
+    },
+    {
+        value: 'ALL_CSUopUFVSv2022',
+        label: 'CSUopUFVSv2020'
+    },
+]
 
-    const menuOptions = [
-        {
-            value: 'ALL_ERO',
-            label: 'ERO'
-        },
-        {
-            value: 'ALL_ST4gARI',
-            label: 'ST4 > ARI'
-        },
-        {
-            value: 'ALL_ST4gFFG',
-            label: 'ST4 > FFG'
-        }
-    ]
+
+
+
+const MapDisplay = (props) => {
 
     const layerConf = {
         'ALL_ERO': {
-            id: 'ALL_ERO',
+            type: 'line',
+            paint: {
+                'line-color': [
+                    'match',
+                    ['get', 'title'],
+                    'MRGL',
+                    'green',
+                    'SLGT',
+                    'orange',
+                    'MDT',
+                    'maroon',
+                    'HIGH',
+                    'magenta',
+                    /* other */ 'black'
+                ],
+                'line-opacity': 0.5
+            }
+        },
+        'ALL_CSUopv2020': {
+            type: 'line',
+            paint: {
+                'line-color': [
+                    'match',
+                    ['get', 'title'],
+                    'MRGL',
+                    'green',
+                    'SLGT',
+                    'orange',
+                    'MDT',
+                    'maroon',
+                    'HIGH',
+                    'magenta',
+                    /* other */ 'black'
+                ],
+                'line-opacity': 0.5
+            }
+        },
+        'ALL_CSUopv2022': {
+            type: 'line',
+            paint: {
+                'line-color': [
+                    'match',
+                    ['get', 'title'],
+                    'MRGL',
+                    'green',
+                    'SLGT',
+                    'orange',
+                    'MDT',
+                    'maroon',
+                    'HIGH',
+                    'magenta',
+                    /* other */ 'black'
+                ],
+                'line-opacity': 0.5
+            }
+        },
+        'ALL_CSUopUFVSv2022': {
             type: 'line',
             paint: {
                 'line-color': [
@@ -52,7 +123,6 @@ const MapDisplay = (props) => {
             }
         },
         'ALL_ST4gARI': {
-            id: 'ALL_ST4gARI',
             type: 'circle',
             paint: {
                 'circle-color': 'red',
@@ -60,7 +130,6 @@ const MapDisplay = (props) => {
             }
         },
         'ALL_ST4gFFG': {
-            id: 'ALL_ST4gFFG',
             type: 'fill',
             paint: {
                 'fill-color': 'blue',
@@ -68,6 +137,7 @@ const MapDisplay = (props) => {
             }
         }
     }
+
 
     let defDate = new Date();
     defDate.setDate(defDate.getDate() - 7);
@@ -84,21 +154,13 @@ const MapDisplay = (props) => {
     const mapRef = useRef();
 
     // const baseURL = 'https://origin.wpc.ncep.noaa.gov/aking/ero_verif/geojsons/'
+    // const baseURL = 'https://www.wpc.ncep.noaa.gov/verification/ero_verif/geojsons/'
     const baseURL = 'http://localhost:3001/'
 
     const legend = new LegendControl({
         layers: Object.keys(layerConf),
         toggler: true
     });
-
-    const LegendControlElement = (props) => {
-      useControl(() => legend, {
-        position: 'bottom-left'
-      });
-
-      return null;
-    }
-    
 
     const constructGeojsonURL = (layerName, day) => {
         let url = baseURL
@@ -144,6 +206,7 @@ const MapDisplay = (props) => {
                 }
             }
             tmpAllLayerData.push({
+                'layer_id':  layerName+props.mapID,
                 'layer_name':layerName,
                 'label': layerLabel,
                 'data': geojsonDataArr
@@ -156,15 +219,27 @@ const MapDisplay = (props) => {
         })
     }
 
+    const removeLegendEntries = (layers) => {
+        for (let n of layers) {
+            const s = document.querySelector(`.mapboxgl-ctrl-legend-pane--${n}`);
+            s && s.remove()
+        }
+
+    }
+
     const handleLayerChange = (layersArr, actionObj) => {
         setSelectedProducts(layersArr)
         if (actionObj.action === 'select-option') {
             addLayerToMap(actionObj.option.value, actionObj.option.label)
         } else if(actionObj.action === 'remove-value') {
             let tmpAllLayerData = [...allLayerData]
-            tmpAllLayerData.splice(tmpAllLayerData.findIndex(({layer_name}) => layer_name == actionObj.removedValue.value), 1);
+            let removedIndex = tmpAllLayerData.findIndex(({layer_name}) => layer_name == actionObj.removedValue.value)
+            removeLegendEntries([tmpAllLayerData[removedIndex].layer_id])
+            tmpAllLayerData.splice(removedIndex, 1);
             setAllLayerData(tmpAllLayerData)
         } else if(actionObj.action === 'clear') {
+            let ids = allLayerData.map(function (el) { return el.layer_id; });
+            removeLegendEntries(ids)
             setAllLayerData([])
         }
     }
@@ -176,10 +251,6 @@ const MapDisplay = (props) => {
     const handleDateChange = (date) => {
         setAllLayerData([])
         setSelectedArchiveDate(date)
-    }
-
-    const onMapLoad = () => {
-        mapRef.current.getMap().addControl(legend, 'bottom-left');
     }
 
     useEffect(() => {
@@ -208,6 +279,7 @@ const MapDisplay = (props) => {
 
 
                     tmpAllLayerData.push({
+                        'layer_id':  selectedProducts[i].value+props.mapID,
                         'layer_name':selectedProducts[i].value,
                         'label': selectedProducts[i].label,
                         'data': geojsonDataArr
@@ -225,6 +297,8 @@ const MapDisplay = (props) => {
     }, [props.comparisonToggled])
 
     useEffect(() => {
+        let ids = allLayerData.map(function (el) { return el.layer_id; });
+        removeLegendEntries(ids)
         setAllLayerData([])
         setSelectedProducts(null)
         
@@ -268,42 +342,44 @@ const MapDisplay = (props) => {
                   {...props.mapViewState}
                   ref={mapRef}
                   onMove={evt => props.setMapViewState(evt.viewState)}
-                  onLoad={onMapLoad}
                   id="map"
                   mapLib={maplibregl}
                   style={{width: '100%', height: '100%'}}
                   mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
                 >
                     <FullscreenControl />
-                    <LegendControlElement/>
+                    <LegendControlElement legend={legend}/>
                     
                     { allLayerData.map((layer) => {
+                        let idObj = {'id':layer.layer_id}
+                        let keyVal = props.archiveOrCurrent === 'current' ? layer.layer_id : layer.layer_id+selectedArchiveDate.toISOString().split('T')[0].replaceAll('-','')
+
                         return (
-                            <Source key={layer.layer_name+selectedDay} id={layer.layer_name+selectedDay} type="geojson" data={layer.data[selectedDay-1]}>
-                              <Layer {...layerConf[layer.layer_name]} metadata={{name: layer.label, labels:{other:false}}}/>
+                            <Source key={keyVal} id={layer.layer_id} type="geojson" data={layer.data[selectedDay-1]}>
+                              <Layer {...{ ...idObj, ...layerConf[layer.layer_name]}} metadata={{name: layer.label, labels:{other:false}}}/>
                             </Source>
                         )
                     })
 
                     }
                 </Map>
-                {/*<MapLegend legend={legend}/>*/}
             </MapProvider>
         </div>
     );
 }
 
-const MapLegend = (props) => {
-    const {map} = useMap();
 
-    console.log(map)
+const LegendControlElement = (props) => {
 
-    if (map !== undefined && props.legend._map === undefined) {
-        console.log("here")
-        map.addControl(props.legend, 'bottom-left');
-    }
-    
-    return(null)
+    useControl(() => props.legend, {
+        position: 'bottom-left',
+        onRemove: () => {console.log("remove")},
+        onAdd: () => {console.log("add")},
+        onCreate: () => {console.log("create")},
+    });
+
+    return null
 }
+
 
 export default MapDisplay;
