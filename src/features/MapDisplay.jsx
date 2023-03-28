@@ -27,6 +27,10 @@ const menuOptions = [
         label: 'ST4 > FFG'
     },
     {
+        value: 'ALL_PP_ST4gFFG',
+        label: 'Practically Perfect ST4 > FFG'
+    },
+    {
         value: 'ALL_CSUopv2020',
         label: 'CSUopv2020'
     },
@@ -154,8 +158,8 @@ const MapDisplay = (props) => {
     const mapRef = useRef();
 
     // const baseURL = 'https://origin.wpc.ncep.noaa.gov/aking/ero_verif/geojsons/'
-    // const baseURL = 'https://www.wpc.ncep.noaa.gov/verification/ero_verif/geojsons/'
-    const baseURL = 'http://localhost:3001/'
+    const baseURL = 'https://origin.wpc.ncep.noaa.gov/verification/ero_verif/geojsons/'
+    // const baseURL = 'http://localhost:3001/'
 
     const legend = new LegendControl({
         layers: Object.keys(layerConf),
