@@ -19,12 +19,24 @@ const menuOptions = [
         label: 'ERO'
     },
     {
+        value: 'ALL_ST4gFFG',
+        label: 'ST4 > FFG'
+    },
+    {
         value: 'ALL_ST4gARI',
         label: 'ST4 > ARI'
     },
     {
-        value: 'ALL_ST4gFFG',
-        label: 'ST4 > FFG'
+        value: 'ALL_LSRFLASH',
+        label: 'LSR Flash'
+    },
+    {
+        value: 'ALL_LSRREG',
+        label: 'LSR Regular'
+    },
+    {
+        value: 'ALL_USGS',
+        label: 'USGS'
     },
     {
         value: 'ALL_PP_ST4gFFG',
@@ -149,11 +161,7 @@ const MapDisplay = (props) => {
     const [allLayerData, setAllLayerData] = useState([]);
     const [selectedDay, setSelectedDay] = useState(1);
     const [selectedProducts, setSelectedProducts] = useState(null);
-    const [viewState, setViewState] = useState({
-        longitude: -100,
-        latitude: 40,
-        zoom: 3.5
-    });
+    const [errArr, setErrArr] = useState([]);
 
     const mapRef = useRef();
 
@@ -200,14 +208,20 @@ const MapDisplay = (props) => {
     const addLayerToMap = (layerName, layerLabel) => {
         let geojsonDataArr = []
         let tmpAllLayerData = [...allLayerData]
+        let tmpErrArr = []
+
         fetchGeojsonData(layerName)
         .then((resultArr) => {
+            console.log(resultArr)
+            let i = 0
             for(let res of resultArr) {
                 if(res.status === 'fulfilled'){
                     geojsonDataArr.push(res.value.data)
                 } else {
                     geojsonDataArr.push(null)
+                    tmpErrArr.push(i+1)
                 }
+                i++
             }
             tmpAllLayerData.push({
                 'layer_id':  layerName+props.mapID,
@@ -216,6 +230,7 @@ const MapDisplay = (props) => {
                 'data': geojsonDataArr
             })
 
+            setErrArr(tmpErrArr)
             setAllLayerData(tmpAllLayerData)
 
         }).catch((e) => {
@@ -308,6 +323,13 @@ const MapDisplay = (props) => {
         
     }, [props.archiveOrCurrent])
 
+
+    useEffect(() => {
+        if(allLayerData.length === 0) {
+            setErrArr([])
+        }
+    }, [allLayerData])
+
     return (
         <div className={`${styles.MapDisplayContainer} ${props.archiveOrCurrent === 'current' ? styles.MapDisplayContainerShort : styles.MapDisplayContainerTall}`}>
             <div className={styles.ProductSelectContainer}>
@@ -368,6 +390,15 @@ const MapDisplay = (props) => {
                     }
                 </Map>
             </MapProvider>
+
+             { errArr.length > 0 ?
+                <div className={styles.ErrorMsgContainer}>
+                    <p>{'Error loading map data for days: ' + errArr.toString()} </p>
+                </div>
+            :
+                null
+            }
+
         </div>
     );
 }
