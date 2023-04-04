@@ -7,6 +7,8 @@ import DatePicker from 'react-datepicker';
 import LegendControl from 'mapboxgl-legend';
 import axios from 'axios'
 
+import { layerConf } from './mapConf'
+
 import styles from './MapDisplay.module.css';
 
 import 'mapboxgl-legend/dist/style.css';
@@ -61,98 +63,7 @@ const menuOptions = [
 
 const MapDisplay = (props) => {
 
-    const layerConf = {
-        'ALL_ERO': {
-            type: 'line',
-            paint: {
-                'line-color': [
-                    'match',
-                    ['get', 'title'],
-                    'MRGL',
-                    'green',
-                    'SLGT',
-                    'orange',
-                    'MDT',
-                    'maroon',
-                    'HIGH',
-                    'magenta',
-                    /* other */ 'black'
-                ],
-                'line-opacity': 0.5
-            }
-        },
-        'ALL_CSUopv2020': {
-            type: 'line',
-            paint: {
-                'line-color': [
-                    'match',
-                    ['get', 'title'],
-                    'MRGL',
-                    'green',
-                    'SLGT',
-                    'orange',
-                    'MDT',
-                    'maroon',
-                    'HIGH',
-                    'magenta',
-                    /* other */ 'black'
-                ],
-                'line-opacity': 0.5
-            }
-        },
-        'ALL_CSUopv2022': {
-            type: 'line',
-            paint: {
-                'line-color': [
-                    'match',
-                    ['get', 'title'],
-                    'MRGL',
-                    'green',
-                    'SLGT',
-                    'orange',
-                    'MDT',
-                    'maroon',
-                    'HIGH',
-                    'magenta',
-                    /* other */ 'black'
-                ],
-                'line-opacity': 0.5
-            }
-        },
-        'ALL_CSUopUFVSv2022': {
-            type: 'line',
-            paint: {
-                'line-color': [
-                    'match',
-                    ['get', 'title'],
-                    'MRGL',
-                    'green',
-                    'SLGT',
-                    'orange',
-                    'MDT',
-                    'maroon',
-                    'HIGH',
-                    'magenta',
-                    /* other */ 'black'
-                ],
-                'line-opacity': 0.5
-            }
-        },
-        'ALL_ST4gARI': {
-            type: 'circle',
-            paint: {
-                'circle-color': 'red',
-                'circle-opacity': 0.5
-            }
-        },
-        'ALL_ST4gFFG': {
-            type: 'fill',
-            paint: {
-                'fill-color': 'blue',
-                'fill-opacity': 0.5
-            }
-        }
-    }
+    
 
 
     let defDate = new Date();
@@ -166,8 +77,8 @@ const MapDisplay = (props) => {
     const mapRef = useRef();
 
     // const baseURL = 'https://origin.wpc.ncep.noaa.gov/aking/ero_verif/geojsons/'
-    const baseURL = 'https://origin.wpc.ncep.noaa.gov/verification/ero_verif/geojsons/'
-    // const baseURL = 'http://localhost:3001/'
+    // const baseURL = 'https://origin.wpc.ncep.noaa.gov/verification/ero_verif/geojsons/'
+    const baseURL = 'http://localhost:3001/'
 
     const legend = new LegendControl({
         layers: Object.keys(layerConf),
