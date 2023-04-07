@@ -41,8 +41,8 @@ const menuOptions = [
         label: 'USGS'
     },
     {
-        value: 'ALL_PP_ST4gFFG',
-        label: 'Practically Perfect ST4 > FFG'
+        value: 'ALL_PP',
+        label: 'Practically Perfect'
     },
     {
         value: 'ALL_CSUopv2020',

@@ -75,10 +75,22 @@ export const layerConf = {
             'line-opacity': 0.5
         }
     },
-    'ALL_PP_ST4gFFG': {
+    'ALL_PP': {
         type: 'fill',
         paint: {
-            'fill-color': 'blue',
+            'fill-color': [
+                'match',
+                ['get', 'title'],
+                '5.00-10.00 ',
+                '#33fff3',
+                '10.00-20.00 ',
+                '#33beff',
+                '20.00-50.00 ',
+                '#337aff',
+                '50.00-100.00 ',
+                '#3c33ff',
+                /* other */ 'black'
+            ],
             'fill-opacity': 0.5
         }
     },
