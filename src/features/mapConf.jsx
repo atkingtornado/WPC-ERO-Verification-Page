@@ -15,7 +15,8 @@ export const layerConf = {
                 'magenta',
                 /* other */ 'black'
             ],
-            'line-opacity': 0.5
+            'line-opacity': 0.8,
+            'line-width': 3
         }
     },
     'ALL_CSUopv2020': {
@@ -34,7 +35,8 @@ export const layerConf = {
                 'magenta',
                 /* other */ 'black'
             ],
-            'line-opacity': 0.5
+            'line-opacity': 0.8,
+            'line-width': 3
         }
     },
     'ALL_CSUopv2022': {
@@ -53,7 +55,8 @@ export const layerConf = {
                 'magenta',
                 /* other */ 'black'
             ],
-            'line-opacity': 0.5
+            'line-opacity': 0.8,
+            'line-width': 3
         }
     },
     'ALL_CSUopUFVSv2022': {
@@ -72,7 +75,8 @@ export const layerConf = {
                 'magenta',
                 /* other */ 'black'
             ],
-            'line-opacity': 0.5
+            'line-opacity': 0.8,
+            'line-width': 3
         }
     },
     'ALL_PP': {
@@ -105,7 +109,8 @@ export const layerConf = {
         type: 'fill',
         paint: {
             'fill-color': 'blue',
-            'fill-opacity': 0.5
+            'fill-opacity': 0.5,
+            'circle-stroke-width':1
         }
     },
     'ALL_LSRFLASH': {
