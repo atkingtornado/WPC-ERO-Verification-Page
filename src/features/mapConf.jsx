@@ -109,8 +109,7 @@ export const layerConf = {
         type: 'fill',
         paint: {
             'fill-color': 'blue',
-            'fill-opacity': 0.5,
-            'circle-stroke-width':1
+            'fill-opacity': 0.5
         }
     },
     'ALL_LSRFLASH': {
