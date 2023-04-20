@@ -37,10 +37,10 @@ function App() {
     <div className="App">
       <NavBar/>
       <div>
-        <h1 className={styles.TitleHeader}>WPC ERO Verification</h1>
+        <h2 className={styles.TitleHeader}>WPC ERO Verification</h2>
 
         <div className={styles.DisplayTypeButtonContainer}>
-          <button className={styles.DisplayTypeButton} onClick={handleDisplayTypeSwitch}>{displayType === 'static' ? "Switch to Interactive View" : "Switch to Plot View"}</button>
+          <button className={styles.DisplayTypeButton} onClick={handleDisplayTypeSwitch}>{displayType === 'static' ? "Interactive View" : "Plot View"}</button>
         </div>
 
         <div className={styles.PlotOptionsContainer}>

@@ -2,23 +2,24 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	margin: 20px;
+	margin: 10px;
 	min-height: 500px;
+	height: calc(100vh - 242px);
 	position: relative;
 }
 
-.MapDisplayContainerShort {
+/*.MapDisplayContainerShort {
 	height: calc(100vh - 295px);
 }
 
 .MapDisplayContainerTall {
 	height: calc(100vh - 295px);
 }
-
+*/
 .ProductSelectContainer {
 	width: 100%;
 	max-width: 600px;
-	margin: 0px 0px 20px 0px;
+	margin: 0px 0px 5px 0px;
 /*	z-index: 9999;*/
 }
 
@@ -28,8 +29,8 @@
   grid-auto-columns: 1fr;
   width: 100%;
   max-width: 600px;
-  height: 50px;
-  margin-bottom: 20px;
+/*  height: 50px;*/
+  margin-bottom: 5px;
 }
 
 .DaySelectButton {
@@ -38,7 +39,7 @@
 	border-radius: 5px;
 	border-width: 1px;
 	border: solid;
-	height: 40px;
+	height: 30px;
 }
 .DaySelectButton:focus {
 	outline: 0;
