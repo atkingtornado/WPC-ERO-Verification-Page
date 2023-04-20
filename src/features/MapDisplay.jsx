@@ -227,6 +227,9 @@ const MapDisplay = (props) => {
     }, [props.comparisonToggled])
 
     useEffect(() => {
+        if(mapRef.current !== null) {
+            mapRef.current.resize()
+        }
         let ids = allLayerData.map(function (el) { return el.layer_id; });
         removeLegendEntries(ids)
         setAllLayerData([])

@@ -3,19 +3,19 @@
 	flex-direction: column;
 	align-items: center;
 	margin: 10px;
-	min-height: 500px;
+	min-height: 300px;
 	height: calc(100vh - 242px);
 	position: relative;
 }
 
 /*.MapDisplayContainerShort {
-	height: calc(100vh - 295px);
+	height: calc(100vh - 242px);
 }
 
 .MapDisplayContainerTall {
-	height: calc(100vh - 295px);
-}
-*/
+	height: calc(100vh - 317px);
+}*/
+
 .ProductSelectContainer {
 	width: 100%;
 	max-width: 600px;

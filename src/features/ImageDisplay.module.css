@@ -29,6 +29,7 @@
 	border: solid;
 	height: 30px;
 }
+
 .DaySelectButton:focus {
 	outline: 0;
 }
@@ -76,19 +77,19 @@
 	max-width: 100%;
 	width: auto;
 	height: auto;
+	
+	min-height: 200px;
+}
+
+.ImgElementShort {
 	max-height: calc(100vh - 335px);
 	min-height: 200px;
 }
 
-/*.ImgElementShort {
-	max-height: calc(100vh - 425px);
+.ImgElementTall {
+	max-height: calc(100vh - 410px);
 	min-height: 200px;
 }
-
-.ImgElementTall {
-	max-height: calc(100vh - 500px);
-	min-height: 200px;
-}*/
 
 .MissingImgText {
 	color: red;

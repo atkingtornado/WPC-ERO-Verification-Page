@@ -55,7 +55,7 @@ function App() {
             </div>
             <div className={styles.ComparisonToggleContainer}>
               <Switch className={styles.ComparisonToggleSwitch} onChange={handleToggleComparison} checked={comparisonToggled} />
-              <p className={styles.ComparisonToggleLabel}>Enable Comparison</p>  
+              <p className={styles.ComparisonToggleLabel}>Compare</p>  
             </div>
           </div>
 
