@@ -6,6 +6,9 @@ import maplibregl from 'maplibre-gl';
 import DatePicker from 'react-datepicker';
 import LegendControl from 'mapboxgl-legend';
 import axios from 'axios'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import Tippy from '@tippyjs/react';
 
 import { layerConf } from './mapConf'
 
@@ -13,6 +16,7 @@ import styles from './MapDisplay.module.css';
 
 import 'mapboxgl-legend/dist/style.css';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import 'tippy.js/dist/tippy.css';
 
 
 const menuOptions = [
@@ -63,9 +67,6 @@ const menuOptions = [
 
 const MapDisplay = (props) => {
 
-    
-
-
     let defDate = new Date();
     defDate.setDate(defDate.getDate() - 7);
     const [selectedArchiveDate, setSelectedArchiveDate] = useState(defDate);
@@ -73,17 +74,51 @@ const MapDisplay = (props) => {
     const [selectedDay, setSelectedDay] = useState(1);
     const [selectedProducts, setSelectedProducts] = useState(null);
     const [errArr, setErrArr] = useState([]);
+    const [dateLabel, setDateLabel] = useState('');
+    const [noContourLabel, setNoContourLabel] = useState('');
 
     const mapRef = useRef();
 
     // const baseURL = 'https://origin.wpc.ncep.noaa.gov/aking/ero_verif/geojsons/'
-    const baseURL = 'https://origin.wpc.ncep.noaa.gov/verification/ero_verif/geojsons/'
-    // const baseURL = 'http://localhost:3001/'
+    // const baseURL = 'https://origin.wpc.ncep.noaa.gov/verification/ero_verif/geojsons/'
+    const baseURL = 'http://localhost:3001/'
 
     const legend = new LegendControl({
         layers: Object.keys(layerConf),
         toggler: true
     });
+
+    const updateNoContourLabel = () => {
+        let tmpLabel = ''
+        for (let d of allLayerData) {
+            if (d.label === 'ERO') {
+                if(d.data[selectedDay-1] !== null && d.data[selectedDay-1].features.length === 0 ){
+                    tmpLabel = "The probablility of rainfall\nexceeding flash flood guidance\nis less than 5 percent"
+                }
+            }
+        }
+        setNoContourLabel(tmpLabel)
+    }
+
+    const updateDateLabel = () => {
+        if(props.archiveOrCurrent === 'current') {
+            // let tmpDate = new Date()
+            // let tmpEndDate = new Date(tmpDate)
+            // tmpEndDate.setDate(tmpEndDate.getDate() + 1)
+
+            // let tmpDateLabel = '12 UTC on ' + tmpDate.toISOString().split('T')[0].replaceAll('-','') +
+            //     ' to 12 UTC on ' + tmpEndDate.toISOString().split('T')[0].replaceAll('-','')
+            setDateLabel('')
+
+        } else {
+            let tmpEndDate = new Date(selectedArchiveDate)
+            tmpEndDate.setDate(tmpEndDate.getDate() + 1)
+
+            let tmpDateLabel = '12 UTC on ' + selectedArchiveDate.toISOString().split('T')[0].replaceAll('-','') +
+                ' to 12 UTC on ' + tmpEndDate.toISOString().split('T')[0].replaceAll('-','')
+            setDateLabel(tmpDateLabel)
+        }
+    }
 
     const constructGeojsonURL = (layerName, day) => {
         let url = baseURL
@@ -171,6 +206,7 @@ const MapDisplay = (props) => {
             let ids = allLayerData.map(function (el) { return el.layer_id; });
             removeLegendEntries(ids)
             setAllLayerData([])
+            setSelectedProducts(null)
         }
     }
 
@@ -183,7 +219,20 @@ const MapDisplay = (props) => {
         setSelectedArchiveDate(date)
     }
 
+    const incrementDate = () => {
+        let tempDate = new Date();
+        tempDate.setDate(selectedArchiveDate.getDate() + 1);
+        setSelectedArchiveDate(tempDate)
+    }
+
+    const decrementDate = () => {
+        let tempDate = new Date();
+        tempDate.setDate(selectedArchiveDate.getDate() - 1);
+        setSelectedArchiveDate(tempDate)
+    }
+
     useEffect(() => {
+        updateDateLabel()
         if (selectedProducts !== null) {
             let requests = []
             for (let product of selectedProducts) {
@@ -231,6 +280,7 @@ const MapDisplay = (props) => {
             mapRef.current.resize()
         }
         let ids = allLayerData.map(function (el) { return el.layer_id; });
+        updateDateLabel()
         removeLegendEntries(ids)
         setAllLayerData([])
         setSelectedProducts(null)
@@ -239,10 +289,16 @@ const MapDisplay = (props) => {
 
 
     useEffect(() => {
+        updateDateLabel()
+        updateNoContourLabel()
         if(allLayerData.length === 0) {
             setErrArr([])
         }
     }, [allLayerData])
+
+    useEffect(() => {
+        updateNoContourLabel()
+    }, [selectedDay])
 
     return (
         <div className={`${styles.MapDisplayContainer} ${props.archiveOrCurrent === 'current' ? styles.MapDisplayContainerShort : styles.MapDisplayContainerTall}`}>
@@ -256,6 +312,27 @@ const MapDisplay = (props) => {
                     placeholder={'Select layers to add to map...'}
                 />
             </div>
+            { props.archiveOrCurrent === 'archive' ?
+                <div className={styles.ArchiveDatePickerContainer}>
+                    <Tippy placement="top" content="Previous Day">
+                        <FontAwesomeIcon onClick={decrementDate} className={styles.ArchiveDatePickerArrowLeft} icon={faArrowLeft} />
+                    </Tippy>
+                    <Tippy placement="top" content="Valid Date">
+                        <div style={{width:'100%'}}>
+                        <DatePicker 
+                          className={styles.ArchiveDatePicker}
+                          selected={selectedArchiveDate} 
+                          onChange={handleDateChange} 
+                          />
+                        </div>
+                    </Tippy>
+                    <Tippy placement="top" content="Next Day">
+                        <FontAwesomeIcon onClick={incrementDate} className={styles.ArchiveDatePickerArrowRight} icon={faArrowRight} />
+                    </Tippy>
+                </div>
+                :
+                null
+            }
 
             <div className={styles.DaySelectContainer}>
                 <button className={`${styles.DaySelectButton} ${selectedDay === 1 ? styles.selected : ''}`} onClick={handleDayChange} value={1}>Day 1</button>
@@ -264,46 +341,51 @@ const MapDisplay = (props) => {
                 <button className={`${styles.DaySelectButton} ${selectedDay === 4 ? styles.selected : ''}`} onClick={handleDayChange} value={4}>Day 4</button>
                 <button className={`${styles.DaySelectButton} ${selectedDay === 5 ? styles.selected : ''}`} onClick={handleDayChange} value={5}>Day 5</button>
             </div>
-            { props.archiveOrCurrent === 'archive' ?
-                <div className={styles.ArchiveDatePickerContainer}>
-                    <p className={styles.ArchiveDatePickerLabel}>Valid start date:</p>
-                    <DatePicker 
-                      className={styles.ArchiveDatePicker}
-                      selected={selectedArchiveDate} 
-                      onChange={handleDateChange} 
-                      />
-                </div>
-                :
-                null
-            }
+            
 
-             <MapProvider>
-                <Map
-                  {...props.mapViewState}
-                  ref={mapRef}
-                  onMove={evt => props.setMapViewState(evt.viewState)}
-                  id="map"
-                  mapLib={maplibregl}
-                  style={{width: '100%', height: '100%'}}
-                  mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
-                >
-                    <FullscreenControl />
-                    <LegendControlElement legend={legend}/>
-                    
-                    { allLayerData.map((layer) => {
-                        let idObj = {'id':layer.layer_id}
-                        let keyVal = props.archiveOrCurrent === 'current' ? layer.layer_id : layer.layer_id+selectedArchiveDate.toISOString().split('T')[0].replaceAll('-','')
-
-                        return (
-                            <Source key={keyVal} id={layer.layer_id} type="geojson" data={layer.data[selectedDay-1]}>
-                              <Layer {...{ ...idObj, ...layerConf[layer.layer_name]}} metadata={{name: layer.label, labels:{other:false}}}/>
-                            </Source>
-                        )
-                    })
-
+            <div className={styles.MapContainer}>
+                <div className={styles.DateLabelContainer}>
+                    {selectedProducts !== null && props.archiveOrCurrent === "archive" ?
+                        <p><b>{'Valid: '}</b>{dateLabel}</p>
+                    :
+                        null
                     }
-                </Map>
-            </MapProvider>
+                </div>
+                <div className={styles.NoContourLabelContainer}>
+                    {noContourLabel !== '' ?
+                        <p>{noContourLabel}</p>
+                    :
+                        null
+                    }
+                </div>
+                <MapProvider>
+                    <Map
+                      {...props.mapViewState}
+                      ref={mapRef}
+                      onMove={evt => props.setMapViewState(evt.viewState)}
+                      id="map"
+                      mapLib={maplibregl}
+                      style={{width: '100%', height: '100%'}}
+                      mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+                    >
+                        <LegendControlElement legend={legend}/>
+                        
+                        { allLayerData.map((layer) => {
+                            let idObj = {'id':layer.layer_id}
+                            let keyVal = props.archiveOrCurrent === 'current' ? layer.layer_id : layer.layer_id+selectedArchiveDate.toISOString().split('T')[0].replaceAll('-','')
+
+                            return (
+                                <Source key={keyVal} id={layer.layer_id} type="geojson" data={layer.data[selectedDay-1]}>
+                                  <Layer {...{ ...idObj, ...layerConf[layer.layer_name]}} metadata={{name: layer.label, labels:{other:false}}}/>
+                                </Source>
+                            )
+                        })
+
+                        }
+                        <FullscreenControl />
+                    </Map>
+                </MapProvider>
+            </div>
 
              { errArr.length > 0 ?
                 <div className={styles.ErrorMsgContainer}>

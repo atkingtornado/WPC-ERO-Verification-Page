@@ -1,3 +1,8 @@
+.NavBar {
+  z-index: 9999!important;
+  position: relative!important;
+}
+
 .TitleHeader {
   margin: 5px 0px 10px 0px;
 }
@@ -67,3 +72,4 @@
     width: 100%;
   }
 }
+

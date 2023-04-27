@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faImage } from '@fortawesome/free-solid-svg-icons'
+import { faImage, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import DatePicker from "react-datepicker";
 import Zoom from 'react-medium-image-zoom'
-
+import Tippy from '@tippyjs/react';
 
 import styles from './ImageDisplay.module.css';
 import "react-datepicker/dist/react-datepicker.css"
 import 'react-medium-image-zoom/dist/styles.css'
+import 'tippy.js/dist/tippy.css';
 
 const baseURL = 'https://www.wpc.ncep.noaa.gov/verification/ero_verif/images/'
 
@@ -110,6 +111,18 @@ const ImageDisplay = (props) => {
 
   const handleDayChange = (e) => {
     setSelectedDay(parseInt(e.target.value))
+  }
+
+  const incrementDate = () => {
+      let tempDate = new Date();
+      tempDate.setDate(selectedArchiveDate.getDate() + 1);
+      setSelectedArchiveDate(tempDate)
+  }
+
+  const decrementDate = () => {
+      let tempDate = new Date();
+      tempDate.setDate(selectedArchiveDate.getDate() - 1);
+      setSelectedArchiveDate(tempDate)
   }
 
   const constructImgURL = () => {
@@ -225,6 +238,24 @@ const ImageDisplay = (props) => {
             : null
         :
         <>
+        <div className={styles.ArchiveDatePickerContainer}>
+            <Tippy placement="top" content="Previous Day">
+                <FontAwesomeIcon onClick={decrementDate} className={styles.ArchiveDatePickerArrowLeft} icon={faArrowLeft} />
+            </Tippy>
+            <Tippy placement="top" content="Valid Date">
+                <div style={{width:'100%'}}>
+                  <DatePicker 
+                    className={styles.ArchiveDatePicker}
+                    selected={selectedArchiveDate} 
+                    onChange={(date) => setSelectedArchiveDate(date)} 
+                  />
+                </div>
+            </Tippy>
+            <Tippy placement="top" content="Next Day">
+                <FontAwesomeIcon onClick={incrementDate} className={styles.ArchiveDatePickerArrowRight} icon={faArrowRight} />
+            </Tippy>
+
+          </div>
           {selectedProduct.value !== 'observed_24hr_precip' ? 
             <div className={styles.DaySelectContainer}>
               <button className={`${styles.DaySelectButton} ${selectedDay === 1 ? styles.selected : ''}`} onClick={handleDayChange} value={1}>Day 1</button>
@@ -242,14 +273,7 @@ const ImageDisplay = (props) => {
             </div>
             : null
           }
-          <div className={styles.ArchiveDatePickerContainer}>
-            <p className={styles.ArchiveDatePickerLabel}>Valid start date:</p>
-            <DatePicker 
-              className={styles.ArchiveDatePicker}
-              selected={selectedArchiveDate} 
-              onChange={(date) => setSelectedArchiveDate(date)} 
-              />
-          </div>
+          
         </>
       }
      

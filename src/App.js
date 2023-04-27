@@ -35,7 +35,9 @@ function App() {
 
   return (
     <div className="App">
-      <NavBar/>
+      <div className={styles.NavBar}>
+        <NavBar/>
+      </div>
       <div>
         <h2 className={styles.TitleHeader}>WPC ERO Verification</h2>
 
@@ -57,7 +59,7 @@ function App() {
               <Switch className={styles.ComparisonToggleSwitch} onChange={handleToggleComparison} checked={comparisonToggled} />
               <p className={styles.ComparisonToggleLabel}>Compare</p>  
             </div>
-          </div>
+        </div>
 
       { displayType === 'interactive' ?
         <>
