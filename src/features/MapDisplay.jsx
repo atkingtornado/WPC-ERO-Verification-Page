@@ -80,8 +80,8 @@ const MapDisplay = (props) => {
     const mapRef = useRef();
 
     // const baseURL = 'https://origin.wpc.ncep.noaa.gov/aking/ero_verif/geojsons/'
-    // const baseURL = 'https://origin.wpc.ncep.noaa.gov/verification/ero_verif/geojsons/'
-    const baseURL = 'http://localhost:3001/'
+    const baseURL = 'https://origin.wpc.ncep.noaa.gov/verification/ero_verif/geojsons/'
+    // const baseURL = 'http://localhost:3001/'
 
     const legend = new LegendControl({
         layers: Object.keys(layerConf),
