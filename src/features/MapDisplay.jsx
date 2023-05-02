@@ -9,6 +9,7 @@ import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import Tippy from '@tippyjs/react';
+import moment from 'moment';
 
 import { layerConf } from './mapConf'
 
@@ -101,23 +102,17 @@ const MapDisplay = (props) => {
     }
 
     const updateDateLabel = () => {
-        if(props.archiveOrCurrent === 'current') {
-            // let tmpDate = new Date()
-            // let tmpEndDate = new Date(tmpDate)
-            // tmpEndDate.setDate(tmpEndDate.getDate() + 1)
-
-            // let tmpDateLabel = '12 UTC on ' + tmpDate.toISOString().split('T')[0].replaceAll('-','') +
-            //     ' to 12 UTC on ' + tmpEndDate.toISOString().split('T')[0].replaceAll('-','')
-            setDateLabel('')
-
-        } else {
-            let tmpEndDate = new Date(selectedArchiveDate)
-            tmpEndDate.setDate(tmpEndDate.getDate() + 1)
-
-            let tmpDateLabel = '12 UTC on ' + selectedArchiveDate.toISOString().split('T')[0].replaceAll('-','') +
-                ' to 12 UTC on ' + tmpEndDate.toISOString().split('T')[0].replaceAll('-','')
-            setDateLabel(tmpDateLabel)
+        let tmpLabel = ''
+        for (let d of allLayerData) {
+            if (d.label === 'ERO') {
+                if (d.data[0] !== null && 'label' in d.data[0]) {
+                    tmpLabel = d.data[0]['label']
+                }                
+                // tmpLabel = tmpLabel.substring(0, tmpLabel.indexOf('UTC') + 3) + '\n' + tmpLabel.substring(tmpLabel.indexOf('UTC') + 4, tmpLabel.length)
+            }
         }
+        console.log(tmpLabel)
+        setDateLabel(tmpLabel)
     }
 
     const constructGeojsonURL = (layerName, day) => {
@@ -220,19 +215,18 @@ const MapDisplay = (props) => {
     }
 
     const incrementDate = () => {
-        let tempDate = new Date();
-        tempDate.setDate(selectedArchiveDate.getDate() + 1);
+        let tempDate = moment(selectedArchiveDate).add(1, 'days');
+        tempDate = tempDate.toDate();
         setSelectedArchiveDate(tempDate)
     }
 
     const decrementDate = () => {
-        let tempDate = new Date();
-        tempDate.setDate(selectedArchiveDate.getDate() - 1);
+        let tempDate = moment(selectedArchiveDate).subtract(1, 'days');
+        tempDate = tempDate.toDate();
         setSelectedArchiveDate(tempDate)
     }
 
     useEffect(() => {
-        updateDateLabel()
         if (selectedProducts !== null) {
             let requests = []
             for (let product of selectedProducts) {
@@ -280,7 +274,6 @@ const MapDisplay = (props) => {
             mapRef.current.resize()
         }
         let ids = allLayerData.map(function (el) { return el.layer_id; });
-        updateDateLabel()
         removeLegendEntries(ids)
         setAllLayerData([])
         setSelectedProducts(null)
@@ -289,8 +282,8 @@ const MapDisplay = (props) => {
 
 
     useEffect(() => {
-        updateDateLabel()
         updateNoContourLabel()
+        updateDateLabel()
         if(allLayerData.length === 0) {
             setErrArr([])
         }
@@ -298,6 +291,7 @@ const MapDisplay = (props) => {
 
     useEffect(() => {
         updateNoContourLabel()
+        updateDateLabel()
     }, [selectedDay])
 
     return (
@@ -345,8 +339,8 @@ const MapDisplay = (props) => {
 
             <div className={styles.MapContainer}>
                 <div className={styles.DateLabelContainer}>
-                    {selectedProducts !== null && props.archiveOrCurrent === "archive" ?
-                        <p><b>{'Valid: '}</b>{dateLabel}</p>
+                    {selectedProducts !== null && dateLabel !== '' ?
+                        <p>{"ERO " + dateLabel}</p>
                     :
                         null
                     }

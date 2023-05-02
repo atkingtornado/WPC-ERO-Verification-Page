@@ -111,15 +111,24 @@
 .MapContainer {
 	width: 100%;
 	height: 100%;
+	display: flex;
+  justify-content: center;
 }
 
 .DateLabelContainer {
 	position: absolute;
 	z-index: 1;
+	background: rgba(0, 0, 0, 0.4);
+	border-radius: 3px;
+	margin-top: 10px
 }
 
 .DateLabelContainer p {
-	margin: 10px 0px 0px 10px;
+	margin: 5px;
+	white-space: pre-wrap;
+	text-align: left;
+	color: white;
+/*  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);*/
 }
 
 .NoContourLabelContainer {

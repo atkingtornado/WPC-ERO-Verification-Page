@@ -5,6 +5,7 @@ import { faImage, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-
 import DatePicker from "react-datepicker";
 import Zoom from 'react-medium-image-zoom'
 import Tippy from '@tippyjs/react';
+import moment from 'moment';
 
 import styles from './ImageDisplay.module.css';
 import "react-datepicker/dist/react-datepicker.css"
@@ -114,14 +115,14 @@ const ImageDisplay = (props) => {
   }
 
   const incrementDate = () => {
-      let tempDate = new Date();
-      tempDate.setDate(selectedArchiveDate.getDate() + 1);
+      let tempDate = moment(selectedArchiveDate).add(1, 'days');
+      tempDate = tempDate.toDate();
       setSelectedArchiveDate(tempDate)
   }
 
   const decrementDate = () => {
-      let tempDate = new Date();
-      tempDate.setDate(selectedArchiveDate.getDate() - 1);
+      let tempDate = moment(selectedArchiveDate).subtract(1, 'days');
+      tempDate = tempDate.toDate();
       setSelectedArchiveDate(tempDate)
   }
 
