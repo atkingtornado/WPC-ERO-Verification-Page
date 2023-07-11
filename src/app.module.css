@@ -3,21 +3,53 @@
   position: relative!important;
 }
 
+.TitleContainer {
+  display: flex;
+  align-items: center;
+  /* text-align: center; */
+  justify-content: center;
+}
+
 .TitleHeader {
-  margin: 5px 0px 10px 0px;
+  margin: 5px 0px 5px 0px;
+}
+
+@keyframes anim-glow {
+   0% {
+     box-shadow: 0 0 #03457f;
+  }
+   100% {
+     box-shadow: 0 0 6px 3px transparent;
+     border-width: 2px;
+  }
+}
+
+.AboutIcon {
+  color: #03457f;
+  border-radius: 50%;
+  margin-left:10px;
+  font-size: 24px;
+  cursor: pointer;
+  animation: anim-glow 2s ease infinite;
+  border: 1px solid white;
 }
 
 .DisplayTypeButtonContainer {
-  margin: 5px;
+  margin: 10px;
 }
 
 .DisplayTypeButton {
-  background: #0058a6;
+  background: #0058a6!important;
   color: white;
-  border-radius: 3px;
-  padding:5px;
+/*  border-radius: 3px;
+  padding:5px;*/
   cursor: pointer;
   font-weight: bold;
+  font-size: 12px;
+}
+
+.DisplayTypeButton:hover {
+  background: #03457f!important;
 }
 
 .SinglePlotContainer {

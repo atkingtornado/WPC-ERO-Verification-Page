@@ -26,8 +26,14 @@
 	margin: 5px;
 	border-radius: 5px;
 	border-width: 1px;
+	border-color:#b8b8b8!important;
 	border: solid;
 	height: 30px;
+	color:#000000!important;
+}
+
+.DaySelectButton:hover {
+	background: #b8b8b8!important;
 }
 
 .DaySelectButton:focus {
@@ -37,7 +43,7 @@
 .DaySelectButton.selected {
 	background: #cdcdcd;
 	border-color: #0058a6;
-	border-width: 3px;
+/*	border-width: 3px;*/
 }
 
 .ArchiveDatePickerContainer {

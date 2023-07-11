@@ -11,6 +11,9 @@ import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import Tippy from '@tippyjs/react';
 import moment from 'moment';
 
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+
 import { layerConf } from './mapConf'
 
 import styles from './MapDisplay.module.css';
@@ -333,11 +336,13 @@ const MapDisplay = (props) => {
             }
 
             <div className={styles.DaySelectContainer}>
-                <button className={`${styles.DaySelectButton} ${selectedDay === 1 ? styles.selected : ''}`} onClick={handleDayChange} value={1}>Day 1</button>
-                <button className={`${styles.DaySelectButton} ${selectedDay === 2 ? styles.selected : ''}`} onClick={handleDayChange} value={2}>Day 2</button>
-                <button className={`${styles.DaySelectButton} ${selectedDay === 3 ? styles.selected : ''}`} onClick={handleDayChange} value={3}>Day 3</button>
-                <button className={`${styles.DaySelectButton} ${selectedDay === 4 ? styles.selected : ''}`} onClick={handleDayChange} value={4}>Day 4</button>
-                <button className={`${styles.DaySelectButton} ${selectedDay === 5 ? styles.selected : ''}`} onClick={handleDayChange} value={5}>Day 5</button>
+                <ButtonGroup disableRipple fullWidth variant="outlined" aria-label="outlined primary button group">
+                    <Button className={`${styles.DaySelectButton} ${selectedDay === 1 ? styles.selected : ''}`} onClick={handleDayChange} value={1}>Day 1</Button>
+                    <Button className={`${styles.DaySelectButton} ${selectedDay === 2 ? styles.selected : ''}`} onClick={handleDayChange} value={2}>Day 2</Button>
+                    <Button className={`${styles.DaySelectButton} ${selectedDay === 3 ? styles.selected : ''}`} onClick={handleDayChange} value={3}>Day 3</Button>
+                    <Button className={`${styles.DaySelectButton} ${selectedDay === 4 ? styles.selected : ''}`} onClick={handleDayChange} value={4}>Day 4</Button>
+                    <Button className={`${styles.DaySelectButton} ${selectedDay === 5 ? styles.selected : ''}`} onClick={handleDayChange} value={5}>Day 5</Button>
+                </ButtonGroup>
             </div>
             
 
