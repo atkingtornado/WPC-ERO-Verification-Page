@@ -237,20 +237,24 @@ const MapDisplay = (props) => {
                 for(let i=0; i<resultArr.length; i++) {
                     let res = resultArr[i]
                     let geojsonDataArr = []
+                    let tmpErrArr = []
 
                     if(res.status === 'fulfilled'){
+                        let i = 0
                         for(let pRes of res.value) {
                             if(pRes.status === 'fulfilled'){
                                 geojsonDataArr.push(pRes.value.data)
                             } else {
                                 geojsonDataArr.push(null)
+                                tmpErrArr.push(i+1)
                             }
+                            i++
                         }
                     } else {
                         geojsonDataArr = [null, null, null, null, null]
+                        tmpErrArr = [1,2,3,4,5]
                     }
-
-
+                    setErrArr(tmpErrArr)
                     tmpAllLayerData.push({
                         'layer_id':  selectedProducts[i].value+props.mapID,
                         'layer_name':selectedProducts[i].value,
