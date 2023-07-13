@@ -19,7 +19,7 @@
      box-shadow: 0 0 #03457f;
   }
    100% {
-     box-shadow: 0 0 6px 3px transparent;
+     box-shadow: 0 0 8px 3px transparent;
      border-width: 2px;
   }
 }
@@ -30,7 +30,7 @@
   margin-left:10px;
   font-size: 24px;
   cursor: pointer;
-  animation: anim-glow 2s ease infinite;
+  animation: anim-glow 1.8s ease infinite;
   border: 1px solid white;
 }
 
