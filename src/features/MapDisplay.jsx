@@ -7,7 +7,7 @@ import DatePicker from 'react-datepicker';
 import LegendControl from 'mapboxgl-legend';
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faArrowLeft, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import Tippy from '@tippyjs/react';
 import moment from 'moment';
 
@@ -80,6 +80,8 @@ const MapDisplay = (props) => {
     const [errArr, setErrArr] = useState([]);
     const [dateLabel, setDateLabel] = useState('');
     const [noContourLabel, setNoContourLabel] = useState('');
+
+    const [isLoading, setIsLoading] = useState(false);
 
     const mapRef = useRef();
 
@@ -154,6 +156,8 @@ const MapDisplay = (props) => {
         let tmpAllLayerData = [...allLayerData]
         let tmpErrArr = []
 
+        setIsLoading(true)
+
         fetchGeojsonData(layerName)
         .then((resultArr) => {
             console.log(resultArr)
@@ -177,8 +181,16 @@ const MapDisplay = (props) => {
             setErrArr(tmpErrArr)
             setAllLayerData(tmpAllLayerData)
 
+            setTimeout(function() {
+              setIsLoading(false)
+            }, 200);
+            
+
         }).catch((e) => {
             console.log(e)
+            setTimeout(function() {
+              setIsLoading(false)
+            }, 200);
         })
     }
 
@@ -347,6 +359,13 @@ const MapDisplay = (props) => {
             
 
             <div className={styles.MapContainer}>
+                {isLoading ?
+                    <div className={styles.LoadingOverlayContainer}>
+                        <FontAwesomeIcon className={'fa-spin'} icon={faSpinner}/>
+                    </div>
+                :
+                    null
+                }
                 <div className={styles.DateLabelContainer}>
                     {selectedProducts !== null && dateLabel !== '' ?
                         <p>{"ERO " + dateLabel}</p>

@@ -4,7 +4,7 @@
 	align-items: center;
 	margin: 10px;
 	min-height: 300px;
-	height: calc(100vh - 242px);
+	height: calc(100vh - 254px);
 	position: relative;
 }
 
@@ -15,6 +15,19 @@
 .MapDisplayContainerTall {
 	height: calc(100vh - 317px);
 }*/
+
+
+.LoadingOverlayContainer {
+	display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 	1;
+  position: absolute;
+  height: 	calc(100vh - 336px);
+  width: 	100%;
+  font-size: 	32px;
+  background: rgb(	0, 0, 0, 40%);
+}
 
 .ProductSelectContainer {
 	width: 100%;
