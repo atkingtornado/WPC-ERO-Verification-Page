@@ -203,21 +203,24 @@ const MapDisplay = (props) => {
     }
 
     const handleLayerChange = (layersArr, actionObj) => {
-        setSelectedProducts(layersArr)
-        if (actionObj.action === 'select-option') {
-            addLayerToMap(actionObj.option.value, actionObj.option.label)
-        } else if(actionObj.action === 'remove-value') {
-            let tmpAllLayerData = [...allLayerData]
-            let removedIndex = tmpAllLayerData.findIndex(({layer_name}) => layer_name == actionObj.removedValue.value)
-            removeLegendEntries([tmpAllLayerData[removedIndex].layer_id])
-            tmpAllLayerData.splice(removedIndex, 1);
-            setAllLayerData(tmpAllLayerData)
-        } else if(actionObj.action === 'clear') {
-            let ids = allLayerData.map(function (el) { return el.layer_id; });
-            removeLegendEntries(ids)
-            setAllLayerData([])
-            setSelectedProducts(null)
+        if(!isLoading) {
+            setSelectedProducts(layersArr)
+            if (actionObj.action === 'select-option') {
+                addLayerToMap(actionObj.option.value, actionObj.option.label)
+            } else if(actionObj.action === 'remove-value') {
+                let tmpAllLayerData = [...allLayerData]
+                let removedIndex = tmpAllLayerData.findIndex(({layer_name}) => layer_name == actionObj.removedValue.value)
+                removeLegendEntries([tmpAllLayerData[removedIndex].layer_id])
+                tmpAllLayerData.splice(removedIndex, 1);
+                setAllLayerData(tmpAllLayerData)
+            } else if(actionObj.action === 'clear') {
+                let ids = allLayerData.map(function (el) { return el.layer_id; });
+                removeLegendEntries(ids)
+                setAllLayerData([])
+                setSelectedProducts(null)
+            }
         }
+        
     }
 
     const handleDayChange = (e) => {
@@ -323,6 +326,7 @@ const MapDisplay = (props) => {
                     isMulti
                     closeMenuOnSelect={false}
                     placeholder={'Select layers to add to map...'}
+                    isLoading={isLoading}
                 />
             </div>
             { props.archiveOrCurrent === 'archive' ?
