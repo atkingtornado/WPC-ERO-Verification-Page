@@ -7,6 +7,7 @@ import Switch from "react-switch";
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import Alert from '@mui/material/Alert';
 
 import ImageDisplay from './features/ImageDisplay';
 import MapDisplay from './features/MapDisplay';
@@ -48,6 +49,7 @@ function App() {
       <div className={styles.NavBar}>
         <NavBar/>
       </div>
+      <Alert sx={{ display: "flex", justifyContent: "center"}} severity="error">****THIS IS A PROTOTYPE WEBSITE****</Alert>
       <div>
         <div className={styles.TitleContainer}>
           <h2 className={styles.TitleHeader}>WPC ERO Verification</h2>

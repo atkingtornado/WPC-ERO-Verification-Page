@@ -102,12 +102,12 @@
 }
 
 .ImgElementShort {
-	max-height: calc(100vh - 335px);
+	max-height: calc(100vh - 385px);
 	min-height: 200px;
 }
 
 .ImgElementTall {
-	max-height: calc(100vh - 410px);
+	max-height: calc(100vh - 460px);
 	min-height: 200px;
 }
 
