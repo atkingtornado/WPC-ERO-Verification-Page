@@ -393,7 +393,7 @@ const MapDisplay = (props) => {
                       id="map"
                       mapLib={maplibregl}
                       style={{width: '100%', height: '100%'}}
-                      mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+                      mapStyle="https://api.maptiler.com/maps/188347a4-71db-46bf-837f-52a4188b469d/style.json?key=3g9gAaRe8ukSFBsBpU96"
                     >
                         <LegendControlElement legend={legend}/>
                         
