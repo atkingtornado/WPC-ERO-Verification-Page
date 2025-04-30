@@ -1,5 +1,3 @@
-"use client"
-
 /**
  * @fileoverview Main application component for WPC ERO Verification tool
  *
