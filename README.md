@@ -1,70 +1,117 @@
-# Getting Started with Create React App
+# ERO Verification Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the official codebase for the [ERO Verification tool](https://www.wpc.ncep.noaa.gov/ero-verification/), developed using [React](https://reactjs.org/) and [Vite](https://vitejs.dev/). The application visualizes Excessive Rainfall Outlook (ERO) verification statistics produced by the Weather Prediction Center (WPC).
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Dual View Modes**:
+  - Static Plot View: Display pre-rendered verification plots and images
+  - Interactive Map View: Explore data layers on an interactive map interface
 
-### `npm start`
+- **Comparison Capabilities**:
+  - Side-by-side comparison of different data products
+  - Toggle between archive and current data
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Time Navigation**:
+  - Day 1-5 forecast selection
+  - Archive date selection with calendar interface
+  - Keyboard navigation support (arrow keys)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Prerequisites
 
-### `npm test`
+- Node.js (v14.0.0 or higher)
+- npm 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Tech Stack
 
-### `npm run build`
+- [React](https://reactjs.org/)
+- [Vite](https://vitejs.dev/)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Getting Started
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Follow the steps below to run the project locally.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 1. Clone the Repository
 
-### `npm run eject`
+```bash
+git clone github.com:atkingtornado/WPC-ERO-Verification-Page.git
+cd WPC-ERO-Verification-Page
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 2. Install dependencies:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm install
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Development
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+This project uses Vite as its build tool and development server. Vite provides fast hot module replacement (HMR) and optimized builds.
 
-## Learn More
+### Start Development Server
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm run dev
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This will start the development server at `http://localhost:3000`.
 
-### Code Splitting
+### Development Features
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+  - **Hot Module Replacement (HMR)**: Changes to your code will be reflected immediately without a full page reload
+  - **Error Overlay**: Errors will be displayed in the browser
+  - **ESLint Integration**: Code quality issues will be highlighted during development
 
-### Analyzing the Bundle Size
+## Building for Production
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+To create a production build:
 
-### Making a Progressive Web App
+```bash
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+This will generate optimized files in the `dist` directory.
 
-### Advanced Configuration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Dependencies
 
-### Deployment
+- **React:** UI library
+- **react-map-gl** & **maplibre-gl**: Map rendering and interaction
+- **react-select**: Enhanced dropdown selection
+- **react-datepicker**: Date selection component
+- **react-medium-image-zoom**: Image zoom functionality
+- **@tippyjs/react**: Tooltip component
+- **@mui/material**: UI components (buttons, alerts, etc.)
+- **@fortawesome/react-fontawesome**: Icon components
+- **axios**: HTTP client for data fetching
+- **moment**: Date manipulation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Usage
 
-### `npm run build` fails to minify
+### Basic Navigation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Toggle between "Plot View" and "Interactive View" using the button at the top
+- Switch between "Archive" and "Current" data using the radio buttons
+- Enable comparison mode by toggling the "Compare" switch
+- Navigate between forecast days (Day 1-5) using the buttons or arrow keys
+
+### Plot View
+
+- Select a product from the dropdown menu
+- Click on the image to zoom in for detailed viewing
+- When in archive mode, use the date picker to select historical dates
+
+### Interactive Map View
+
+- Select layers to add to the map from the dropdown menu
+- Multiple layers can be selected for combined visualization
+- Use standard map controls for navigation:
+    - Pan: Click and drag
+    - Zoom: Scroll wheel
+    - Rotate/Tilt: Right-click and drag
+- Toggle layer visibility using the legend in the bottom-left corner
+- Use the fullscreen button to expand the map view
+
+## Customizing Vite Configuration
+
+If you need to customize the Vite configuration, you can modify the `vite.config.js` file.

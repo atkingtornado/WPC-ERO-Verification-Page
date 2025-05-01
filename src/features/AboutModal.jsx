@@ -53,7 +53,7 @@ const AboutModal = (props) => {
                   </li>
                   <ul>
                     <li>
-                      <b>Description:</b> Points where Stage IV rainfall exceeds the 1-, 2-, and 10-year Average
+                      <b>Description:</b> Points where Stage IV rainfall exceeds the 5-year Average
                       Recurrence Interval value.
                     </li>
                     <li>
@@ -62,6 +62,9 @@ const AboutModal = (props) => {
                     <ul>
                       <li>
                         Perica, S., and Coauthors, 2013: Precipitation-frequency atlas of the United States. NOAA Atlas.
+                      </li>
+                      <li>
+                        Nelson, B. R., O. P. Prat, D.-J. Seo, and E. Habib, 2016: Assessment and implications of NCEP Stage IV quantitative precipitation estimates for product intercomparisons. Weather and Forecasting, 31 (2), 371 – 394, <a href="https://doi.org/https://doi.org/10.1175/WAF-D-14-00112.1">https://doi.org/https://doi.org/10.1175/WAF-D-14-00112.1</a>.
                       </li>
                     </ul>
                   </ul>
@@ -133,7 +136,7 @@ const AboutModal = (props) => {
                   </li>
                   <ul>
                     <li>
-                      <b>Description:</b> The risk (probability) of rainfall exceeding Flash Flood Guidance within 40 km
+                      <b>Description:</b> The risk (probability) of rainfall exceeding Flash Flood Guidance within 25 miles
                       of a point.
                       <br />
                       <br />
@@ -144,6 +147,23 @@ const AboutModal = (props) => {
                       Moderate: At least 40 %
                       <br />
                       High: At least 70%
+                    </li>
+                    <br/>
+                    *Note that these values changed on 2/11/2022
+                    <br/>
+                    <li>
+                      <b>Issuance Times:</b>
+                      <br/>
+                      Day 1 is issued at 09Z, 16Z, 21Z, and 01Z
+                      <br/>
+                      Days 2-5 are issued at 09Z and 21Z
+                    </li>
+                    <li>
+                      <b>Valid Times:</b>
+                      <br/>
+                      Day 1 can be valid from 12Z - 12Z (09Z issuance), from 01 - 12Z (01Z issuance *no verification produced for this period), or from 16Z/21Z - 12Z.
+                      <br/>
+                      Days 2-5 are always valid from 12Z - 12Z
                     </li>
                   </ul>
                 </ul>
@@ -160,11 +180,13 @@ const AboutModal = (props) => {
               <AccordionDetails>
                 <ul>
                   <li>
-                    <b>BSS:</b>
+                    <b>BSS:</b> Brier Skill Score for the UFVS observations and the ERO contour.
                   </li>
                   <li>
                     <b>FC stats:</b> Fractional coverage of UFVS observations within the ERO contour for each respective
                     category.
+                    <br/>
+                    (The goal of this is to get the fractional coverage to the probability threshold for that contour. For example, ideally FC for MDT would be above 40%)
                   </li>
                 </ul>
               </AccordionDetails>
@@ -179,6 +201,9 @@ const AboutModal = (props) => {
               </AccordionSummary>
               <AccordionDetails>
                 <ul>
+                  <li>
+                    <b>Description:</b> Grid-to-grid verification of the CSU-MLP products. These products provide a first guess for the ERO which forecasters can choose to use as guidance in creating their EROs. The CSU-MLP has the same risk categories as the regular ERO, and verification is completed the same way.
+                  </li>
                   <li>
                     <b>Relevant Publications:</b>
                   </li>
@@ -203,7 +228,14 @@ const AboutModal = (props) => {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <ul>{/* Content to be added */}</ul>
+                <ul>
+                  <li><b>BSS and AuROC:</b> Shows the Brier Skill Score for each issuance time of the Day 1 ERO (see if the updates improved the skill) in the blue line. The red line shows the area under the relative operating characteristic curve (ROC curve) as a function of issuance time. A perfect ERO would have an AuROC of 1.0. (further <a href="https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc">information</a>)</li>
+                  <li><b>BSS and AuROC Compared to Practically Perfect:</b> Shows BSS and AuROC (see above) for the EROs and CSU MLP products compared to the Practically Perfect Verification. The Practically Perfect takes the UFVS verification, creates one “super” object, and applies a Gaussian smoother (making the object more circular) as well as a weighting algorithm to give more weight to observations in the UFVS and less weight to the proxies (Stage IV exceedances). <a href="https://doi.org/10.1175/WAF-D-20-0020.1">Further information on PP</a></li>
+                  <li><b>Contingency bias compared to PP:</b> Contingency bias for EROs and the various versions of the CSU-MLP for each ERO category.</li>
+                  <li><b>CSI compared to PP:</b> Critical Success Index of the EROs (split by category) versus the practically perfect verification.</li>
+                  <li><b>False alarm compared to PP:</b> contingency table statistics false alarm rate of each ERO category compared to the PP verification. “Perfect” would be 0.</li>
+                  <li><b>Hit rate compared to PP:</b> contingency table statistics hit rate of each ERO category compared to the PP verification. “Perfect” would be 1.0.</li>
+                </ul>
               </AccordionDetails>
             </Accordion>
 
@@ -215,7 +247,10 @@ const AboutModal = (props) => {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <ul>{/* Content to be added */}</ul>
+                <ul>
+                  <li><b>ERO bulk probabilities by threshold:</b> Average probability of the verification for each ERO category compared to two different subsets of the UFVS. Blue bars indicate using Stage IV exceedances of FFG only. The orange bars indicate probabilities when using the full UFVS. The green bars represent the lower bound of the probability defining each ERO category, and the red lines represent the upper bound of the probability. For example, a Slight Risk is defined as a 15-40% risk of excessive rainfall occurring within 40 km of a point.</li>
+                  <li><b>CSU bulk probabilities by threshold:</b>  Average probability of the UFVS verification for each CSU-MLP ERO category. The green bars represent the lower bound of the probability defining each ERO category, and the red lines represent the upper bound of the probability. Different color bars show different versions of the CSU-MLP.</li>
+                </ul>
               </AccordionDetails>
             </Accordion>
 
@@ -227,7 +262,13 @@ const AboutModal = (props) => {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <ul>{/* Content to be added */}</ul>
+                <ul>
+                  <li><b>1-year ERO category frequency (Marginal, Slight, Moderate, High):</b> Probability of the point being within an ERO of this category.</li>
+                  <li><b>1-year PP frequency at each category (Marginal, Slight, Moderate, High):</b> Probability of the point being within a PP verification object of this category.</li>
+                  <li><b>1-year 2022 UFVS CSU-MLP Operational GEFS:</b> Probability of the point being within a UFVS object matching this category.</li>
+                  <li><b>1-year 2022 CSU-MLP Operational GEFS:</b> Probability of the point being within an ERO first guess from CSU MLP of this category. 2022 version of the CSU MLP.</li>
+                  <li><b>1-year 2020 CSU-MLP Operational GEFS:</b> Probability of the point being within an ERO first guess from CSU MLP of this category. 2020 version of the CSU MLP.</li>
+                </ul>
               </AccordionDetails>
             </Accordion>
           </AccordionDetails>
