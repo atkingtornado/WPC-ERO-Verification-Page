@@ -15,10 +15,13 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DatePicker from "react-datepicker";
 
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 
 import "react-datepicker/dist/react-datepicker.css";
 
 import type { MenuSelection } from "./types"
+
+dayjs.extend(utc)
 
 
 interface SelectionMenuProps {
@@ -26,14 +29,35 @@ interface SelectionMenuProps {
   selection: MenuSelection;
   updateSelection: <K extends keyof SelectionMenuProps["selection"]>(key: K, value: SelectionMenuProps["selection"][K]) => void;
 }
-export const SelectionMenu = ({selection, updateSelection}: SelectionMenuProps) => {
+export const SelectionMenu = ({displayType, selection, updateSelection}: SelectionMenuProps) => {
 
   /**
     * Handles change events for date selection
   */
   const handleDateChange = (date) => {
-    updateSelection("selectedDate", date);
+    let dayjsDate = dayjs.utc(date).hour(12).minute(0).second(0).millisecond(0)
+    updateSelection("selectedDate", dayjsDate);
   };
+
+  /**
+   * Increments the selected date by one day
+   */
+  const incrementDate = () => {
+    let tmpDate = selection.selectedDate.add(1, "day")
+    let currDate = dayjs.utc().hour(12).minute(0).second(0).millisecond(0)
+    // Prevent date from exceeding current date
+    if (tmpDate <= currDate) {
+      updateSelection("selectedDate", tmpDate);
+    } 
+  }
+
+  /**
+   * Decrements the selected date by one day
+   */
+  const decrementDate = () => {
+    let tmpDate = selection.selectedDate.subtract(1, "day")
+    updateSelection("selectedDate", tmpDate);
+  }
 
   /**
     * Handles fhour change events
@@ -52,41 +76,43 @@ export const SelectionMenu = ({selection, updateSelection}: SelectionMenuProps) 
   };
 
   return (
-    <div className="flex align-center justify-center ">
-      <Paper className="gap-2 p-2 w-full max-w-lg flex-col flex justify-center align-center">
+    <div className="z-10 flex align-center justify-center ">
+      <Paper className="z-20 gap-2 p-2 w-full max-w-lg flex-col flex justify-center align-center">
 
         <div className="w-full flex">
-          <IconButton aria-label="back">
+          <IconButton onClick={decrementDate} aria-label="back">
             <ArrowBackIcon />
           </IconButton>
           <DatePicker 
               wrapperClassName='w-full z-20'
               className='border-[1px] border-[#808080] w-full rounded pl-2 pr-2 pt-2 pb-2 placeholder-[#808080]'
               placeholderText="ERO Valid Date"
-              selected={selection["selectedDate"]} 
+              selected={selection["selectedDate"].toDate()} 
               onChange={handleDateChange}
               // onFocus={() => {setSearchByNumber(false)}}
               // minDate={dayjs(yearOptions[0].value.toString(), "YYYY").toDate()}
-              maxDate={dayjs().toDate()}
+              maxDate={dayjs().utc().toDate()}
           />
-          <IconButton aria-label="forward">
+          <IconButton onClick={incrementDate} aria-label="forward">
             <ArrowForwardIcon />
           </IconButton>
         </div>
 
-        <div className="mt-1 w-full flex justify-center align-center">
-          <FormControl fullWidth size="small">
-            <InputLabel htmlFor="grouped-select">Verification Plot</InputLabel>
-            <Select value={selection["selectedPlot"]} onChange={handlePlotChange} id="grouped-select" label="Verification Plot">
-              <ListSubheader>Operational</ListSubheader>
-              <MenuItem value={"wpc_ero_verifall"}>ERO vs. All</MenuItem>
-              <MenuItem value={"wpc_ero_verifpp"}>ERO vs. Practically Perfect</MenuItem>
-              <ListSubheader>New Contours</ListSubheader>
-              <MenuItem value={"wpc_ero_verifallnc"}>ERO vs. All</MenuItem>
-              <MenuItem value={"wpc_ero_verifppnc"}>ERO vs. Practically Perfect</MenuItem>
-            </Select>
-          </FormControl>
-        </div>
+        {displayType === "static" &&
+          <div className="mt-1 w-full flex justify-center align-center">
+            <FormControl fullWidth size="small">
+              <InputLabel htmlFor="grouped-select">Verification Plot</InputLabel>
+              <Select value={selection["selectedPlot"]} onChange={handlePlotChange} id="grouped-select" label="Verification Plot">
+                <ListSubheader>Operational</ListSubheader>
+                <MenuItem value={"wpc_ero_verifall"}>ERO vs. All</MenuItem>
+                <MenuItem value={"wpc_ero_verifpp"}>ERO vs. Practically Perfect</MenuItem>
+                <ListSubheader>New Contours</ListSubheader>
+                <MenuItem value={"wpc_ero_verifallnc"}>ERO vs. All</MenuItem>
+                <MenuItem value={"wpc_ero_verifppnc"}>ERO vs. Practically Perfect</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+        }
 
         <div className="w-full flex justify-center align-center">
           <ToggleButtonGroup

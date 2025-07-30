@@ -4,21 +4,29 @@
  * This component handles the state and display for both interactive and static (plot) views
  */
 
-import { useState } from 'react'
+import React, { useState } from 'react'
+
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 
 import { ImageDisplay } from "./ImageDisplay"
+import { MapDisplay } from "./MapDisplay"
 import { SelectionMenu } from "./SelectionMenu"
-import type { MenuSelection } from "./types"
+import type { MenuSelection, MapViewState } from "./types"
+
+dayjs.extend(utc)
 
 
 interface DataDisplayProps {
+  mapViewState: MapViewState;
+  setMapViewState: React.Dispatch<React.SetStateAction<MapViewState>>;
   displayType: "static"|"interactive";
 }
-export const DataDisplay = ( { displayType }: DataDisplayProps ) => {
+export const DataDisplay = ({ mapViewState, setMapViewState, displayType }: DataDisplayProps) => {
 
   // State for storing menu selections
   const [selection, setSelection] = useState<MenuSelection>({
-    selectedDate: new Date(),
+    selectedDate: dayjs.utc().subtract(1,"day").hour(12).minute(0).second(0).millisecond(0),
     fHour: 24,
     selectedPlot: "wpc_ero_verifall",
   });
@@ -38,9 +46,15 @@ export const DataDisplay = ( { displayType }: DataDisplayProps ) => {
         updateSelection={updateSelection}
       />
       { displayType === "static" ?
-        <ImageDisplay/>
+        <ImageDisplay
+          selection={selection}
+        />
       :
-        null
+        <MapDisplay
+          selection={selection}
+          mapViewState={mapViewState}
+          setMapViewState={setMapViewState}
+        />
       }
     </>
   )

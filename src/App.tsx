@@ -28,6 +28,7 @@ import { ThemeToggle } from "./features/ThemeToggle"
 import { DataDisplay } from "./features/DataDisplay"
 import { useTheme } from "./context/ThemeContext"
 
+import type { MapViewState } from "./types"
 
 import 'react-medium-image-zoom/dist/styles.css';
 
@@ -49,6 +50,13 @@ function App() {
 
   // State for controlling the help/about modal visibility
   const [helpMenuOpen, setHelpMenuOpen] = useState<boolean>(false)
+
+  // State for controlling the interactive map view - at the App level to facilitate sync when comparing
+  const [mapViewState, setMapViewState] = useState<MapViewState>({
+    longitude: -98.4,
+    latitude: 39.5,
+    zoom: 3
+  });
 
   /**
     * Opens the help/about modal
@@ -104,7 +112,7 @@ function App() {
 
         <div className="w-full flex flex-col justify-center align-center">
 
-          <div className="flex mb-2 gap-4 align-center justify-center">
+          <div className="flex z-10 mb-2 gap-4 align-center justify-center">
             <div>
               <ToggleButtonGroup
                 color="primary"
@@ -123,20 +131,17 @@ function App() {
             </div>
           </div>
 
-          {comparisonToggled ? 
-          <div className="flex flex-row">
-            <div className="w-[50%]">
-              <DataDisplay displayType={displayType}/>
+          <div className={`flex ${comparisonToggled ? 'flex-row' : ''}`}>
+            <div className={comparisonToggled ? 'w-[50%]' : 'w-full'}>
+              <DataDisplay mapViewState={mapViewState} setMapViewState={setMapViewState} displayType={displayType} />
             </div>
-            <div className="w-[50%]">
-              <DataDisplay displayType={displayType}/>
-            </div>
+
+            {comparisonToggled && (
+              <div className="w-[50%]">
+                <DataDisplay mapViewState={mapViewState} setMapViewState={setMapViewState} displayType={displayType} />
+              </div>
+            )}
           </div>
-          :
-            <div className="w-full">
-              <DataDisplay displayType={displayType}/>
-            </div>
-          }
           
 
         </div>
