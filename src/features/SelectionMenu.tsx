@@ -98,21 +98,21 @@ export const SelectionMenu = ({displayType, selection, updateSelection}: Selecti
           </IconButton>
         </div>
 
-        {displayType === "static" &&
-          <div className="mt-1 w-full flex justify-center align-center">
-            <FormControl fullWidth size="small">
-              <InputLabel htmlFor="grouped-select">Verification Plot</InputLabel>
-              <Select value={selection["selectedPlot"]} onChange={handlePlotChange} id="grouped-select" label="Verification Plot">
-                <ListSubheader>Operational</ListSubheader>
-                <MenuItem value={"wpc_ero_verifall"}>ERO vs. All</MenuItem>
-                <MenuItem value={"wpc_ero_verifpp"}>ERO vs. Practically Perfect</MenuItem>
-                <ListSubheader>New Contours</ListSubheader>
-                <MenuItem value={"wpc_ero_verifallnc"}>ERO vs. All</MenuItem>
-                <MenuItem value={"wpc_ero_verifppnc"}>ERO vs. Practically Perfect</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
-        }
+
+        <div className="mt-1 w-full flex justify-center align-center">
+          <FormControl fullWidth size="small">
+            <InputLabel htmlFor="grouped-select">Verification Plot</InputLabel>
+            <Select value={selection["selectedPlot"]} onChange={handlePlotChange} id="grouped-select" label="Verification Plot">
+              <ListSubheader>Operational</ListSubheader>
+              <MenuItem value={"wpc_ero_verifall"}>ERO vs. All</MenuItem>
+              <MenuItem value={"wpc_ero_verifpp"}>ERO vs. Practically Perfect</MenuItem>
+              <ListSubheader>New Contours</ListSubheader>
+              <MenuItem value={"wpc_ero_verifallnc"}>ERO vs. All</MenuItem>
+              <MenuItem value={"wpc_ero_verifppnc"}>ERO vs. Practically Perfect</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
+
 
         <div className="w-full flex justify-center align-center">
           <ToggleButtonGroup
