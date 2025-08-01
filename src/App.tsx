@@ -18,7 +18,7 @@ import Paper from '@mui/material/Paper';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
+import HelpIcon from '@mui/icons-material/Help';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
@@ -26,6 +26,7 @@ import { NavBar } from "@atkingtornado/wpc-navbar-reactjs"
 
 import { ThemeToggle } from "./features/ThemeToggle"
 import { DataDisplay } from "./features/DataDisplay"
+import { AboutModal } from "./features/AboutModal"
 import { useTheme } from "./context/ThemeContext"
 
 import type { MapViewState } from "./types"
@@ -49,7 +50,7 @@ function App() {
   const [displayType, setDisplayType] = useState<"static"|"interactive">("static")
 
   // State for controlling the help/about modal visibility
-  const [helpMenuOpen, setHelpMenuOpen] = useState<boolean>(false)
+  const [aboutModalOpen, setAboutModalOpen] = useState<boolean>(false)
 
   // State for controlling the interactive map view - at the App level to facilitate sync when comparing
   const [mapViewState, setMapViewState] = useState<MapViewState>({
@@ -61,12 +62,12 @@ function App() {
   /**
     * Opens the help/about modal
   */
-  const handleOpen = () => setHelpMenuOpen(true)
+  const handleOpen = () => setAboutModalOpen(true)
 
   /**
     * Closes the help/about modal
   */
-  const handleClose = () => setHelpMenuOpen(false)
+  const handleClose = () => setAboutModalOpen(false)
 
   /**
     * Toggles the comparison mode between single and side-by-side view
@@ -98,16 +99,16 @@ function App() {
       <div className="flex-1 relative">
         <ThemeToggle />
 
-        <div className="flex align-center justify-center mb-2 mt-2">
+        <div className="flex items-center text-center justify-center mb-2 mt-2">
           <Typography variant="h5" component="h2" fontWeight="bold">
             WPC ERO Verification
           </Typography>
 
-          <Tooltip title="About this product">
-            <div className="text-[#03457f] rounded-full ml-[10px] text-[24px] cursor-pointer animate-glow">
-              <InfoOutlineIcon  color="primary" />
-            </div>
-          </Tooltip>
+          <div className="ml-1 cursor-pointer">
+            <Tooltip title="About this product">
+              <HelpIcon color="primary" onClick={handleOpen} />
+            </Tooltip>
+          </div>
         </div>
 
         <div className="w-full flex flex-col justify-center align-center">
@@ -147,6 +148,9 @@ function App() {
         </div>
 
       </div>
+
+      {/* About modal */}
+      <AboutModal onClose={handleClose} open={aboutModalOpen} />
 
     </div>
   )

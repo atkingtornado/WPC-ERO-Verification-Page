@@ -86,8 +86,8 @@ export const mapLayerConf = {
   st4geari_co_2p5km_with_40km_radius: {
     type: "fill",
     paint: {
-      "fill-color":["get", "fill"],
-      "fill-opacity": ["get", "fill-opacity"],
+      "fill-color": "#ff403f",
+      "fill-opacity": 0.6,
     },
   },
 
@@ -98,8 +98,8 @@ export const mapLayerConf = {
   st4geffg_co_2p5km_with_40km_radius: {
     type: "fill",
     paint: {
-      "fill-color":["get", "fill"],
-      "fill-opacity": ["get", "fill-opacity"],
+      "fill-color": "#7f7fff",
+      "fill-opacity": 0.6,
     },
   },
 

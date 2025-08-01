@@ -10,7 +10,7 @@ import axios from "axios"
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 
-import { Map, Source, Layer, useControl } from 'react-map-gl/maplibre';
+import { Map, Source, Layer, useControl, FullscreenControl } from 'react-map-gl/maplibre';
 import LegendControl from "mapboxgl-legend"
 import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
@@ -123,6 +123,7 @@ export const MapDisplay = ({ selection, mapViewState, setMapViewState }: MapDisp
         style={{width: "100%", height:"100%"}}
         mapStyle="https://api.maptiler.com/maps/188347a4-71db-46bf-837f-52a4188b469d/style.json?key=3g9gAaRe8ukSFBsBpU96"
       >
+        <FullscreenControl position="top-right" />
         <LegendControlElement legend={legend} />
         { !geojsonsAreLoading && geojsonData !== null &&
           mapLayerPlotConf[selection.selectedPlot].map((layerName) => {
@@ -131,7 +132,7 @@ export const MapDisplay = ({ selection, mapViewState, setMapViewState }: MapDisp
                 <Source key={layerName+"source"} id={layerName+"source"} type="geojson" data={geojsonData[layerName]}>
                   <Layer 
                     id={layerName} 
-                    metadata={{ name: mapLayerLabelConf[layerName].name, labels: mapLayerLabelConf[layerName].labels }} 
+                    metadata={mapLayerLabelConf[layerName]} 
                     {...mapLayerConf[layerName]}
                   />
                   { layerName === "wpcero" &&
