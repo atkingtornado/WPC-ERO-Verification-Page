@@ -24,7 +24,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 dayjs.extend(utc)
 
 
-const baseURL = window.location.origin.includes("localhost") ? "http://localhost:3001/" : "https://www.wpc.ncep.noaa.gov/verification/ero_verif_updated/geojsons/"
+const baseURL = window.location.origin.includes("localhost") ? "http://localhost:3001/" : "https://www.wpc.ncep.noaa.gov/verification/ero_verif_updated/geojson/"
 
 interface MapDisplayProps {
   selection: MenuSelection;
