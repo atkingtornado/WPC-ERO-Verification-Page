@@ -8,7 +8,7 @@ export function ThemeToggle() {
   return (
     <div className="z-30 absolute left-2 mt-[14px]">
       <Tooltip title={`Switch to ${mode === "light" ? "dark" : "light"} mode`}>
-        <IconButton onClick={toggleTheme} color="text.primary">
+        <IconButton onClick={toggleTheme} sx={{ color: "text.primary" }}>
           {mode === "light" ? <Brightness4 /> : <Brightness7 />}
         </IconButton>
       </Tooltip>

@@ -1,15 +1,12 @@
-import { useState } from 'react'
-
 import ToggleButton from "@mui/material/ToggleButton"
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import Typography from "@mui/material/Typography"
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import ListSubheader from '@mui/material/ListSubheader';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DatePicker from "react-datepicker";
@@ -19,7 +16,7 @@ import utc from 'dayjs/plugin/utc'
 
 import "react-datepicker/dist/react-datepicker.css";
 
-import type { MenuSelection } from "./types"
+import type { MenuSelection } from "../types"
 
 dayjs.extend(utc)
 
@@ -29,13 +26,14 @@ interface SelectionMenuProps {
   selection: MenuSelection;
   updateSelection: <K extends keyof SelectionMenuProps["selection"]>(key: K, value: SelectionMenuProps["selection"][K]) => void;
 }
-export const SelectionMenu = ({displayType, selection, updateSelection}: SelectionMenuProps) => {
+// displayType is accepted for parity with the callers but the menu is the same in both modes
+export const SelectionMenu = ({ selection, updateSelection }: SelectionMenuProps) => {
 
   /**
     * Handles change events for date selection
   */
-  const handleDateChange = (date) => {
-    let dayjsDate = dayjs.utc(date).hour(12).minute(0).second(0).millisecond(0)
+  const handleDateChange = (date: Date | null) => {
+    const dayjsDate = dayjs.utc(date).hour(12).minute(0).second(0).millisecond(0)
     updateSelection("selectedDate", dayjsDate);
   };
 
@@ -43,8 +41,8 @@ export const SelectionMenu = ({displayType, selection, updateSelection}: Selecti
    * Increments the selected date by one day
    */
   const incrementDate = () => {
-    let tmpDate = selection.selectedDate.add(1, "day")
-    let currDate = dayjs.utc().hour(12).minute(0).second(0).millisecond(0)
+    const tmpDate = selection.selectedDate.add(1, "day")
+    const currDate = dayjs.utc().hour(12).minute(0).second(0).millisecond(0)
     // Prevent date from exceeding current date
     if (tmpDate <= currDate) {
       updateSelection("selectedDate", tmpDate);
@@ -55,14 +53,14 @@ export const SelectionMenu = ({displayType, selection, updateSelection}: Selecti
    * Decrements the selected date by one day
    */
   const decrementDate = () => {
-    let tmpDate = selection.selectedDate.subtract(1, "day")
+    const tmpDate = selection.selectedDate.subtract(1, "day")
     updateSelection("selectedDate", tmpDate);
   }
 
   /**
     * Handles fhour change events
   */
-  const handleFHourChange = (e, newValue) => {
+  const handleFHourChange = (_e: React.MouseEvent<HTMLElement>, newValue: number | null) => {
     if(newValue !== null) {
       updateSelection("fHour", newValue);
     }
@@ -71,7 +69,7 @@ export const SelectionMenu = ({displayType, selection, updateSelection}: Selecti
   /**
     * Handles change events for plot selection
   */
-  const handlePlotChange = (e) => {
+  const handlePlotChange = (e: SelectChangeEvent<string>) => {
     updateSelection("selectedPlot", e.target.value);
   };
 

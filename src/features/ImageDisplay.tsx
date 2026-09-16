@@ -15,7 +15,7 @@ import Zoom from "react-medium-image-zoom"
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 
-import type { MenuSelection } from "./types"
+import type { MenuSelection } from "../types"
 
 dayjs.extend(utc)
 
@@ -47,8 +47,8 @@ export const ImageDisplay = ({ selection }: ImageDisplayProps) => {
   */
   const genImgURL = () => {
     let tmpURL = "https://www.wpc.ncep.noaa.gov/verification/ero_verif_updated/images/"
-    let formattedDate = dayjs.utc(selection.selectedDate).format("YYYYMMDDHH")
-    let formattedPlotDate = dayjs.utc(selection.selectedDate).subtract(selection.fHour, "hour").format("YYYYMMDDHH")
+    const formattedDate = dayjs.utc(selection.selectedDate).format("YYYYMMDDHH")
+    const formattedPlotDate = dayjs.utc(selection.selectedDate).subtract(selection.fHour, "hour").format("YYYYMMDDHH")
 
     tmpURL += `${formattedDate}/${selection.selectedPlot}_${formattedPlotDate}f${selection.fHour.toString().padStart(3, '0')}.png`
 

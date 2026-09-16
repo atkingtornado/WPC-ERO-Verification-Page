@@ -6,11 +6,29 @@
  * based on its data type and purpose.
  */
 
+import type { LayerProps } from "react-map-gl/maplibre"
+
+/** Omit that distributes over a union, so each LayerProps variant keeps its own paint/layout keys */
+type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never
+
+/**
+ * How one data layer draws: everything a react-map-gl <Layer> needs except its
+ * id. Style-spec layers only — the `custom` (WebGL) variant carries no
+ * `metadata`, which the legend reads from every data layer.
+ */
+export type DataLayerStyle = DistributiveOmit<Exclude<LayerProps, { type: "custom" }>, "id">
+
+/** Legend entry for one data layer: its display name and per-category labels */
+export interface DataLayerLabel {
+  name: string
+  labels: Record<string, string | boolean>
+}
+
 /**
  * Layer configuration object that defines how each data layer should be rendered on the map
  *
  */
-export const mapLayerConf = {
+export const mapLayerConf: Record<string, DataLayerStyle> = {
   /**
    * ERO (Excessive Rainfall Outlook) contours
    * Displays risk categories as filled contours
@@ -144,7 +162,7 @@ export const mapLayerConf = {
  * Layer label configuration object that defines long names for each layer (used in legend)
  *
  */
-export const mapLayerLabelConf = {
+export const mapLayerLabelConf: Record<string, DataLayerLabel> = {
   wpcero: {
     name: "ERO", 
     labels: {
@@ -176,7 +194,7 @@ export const mapLayerLabelConf = {
  * Map plot layer configuration object that defines which layers are in each "plot"
  *
  */
-export const mapLayerPlotConf = {
+export const mapLayerPlotConf: Record<string, string[]> = {
   wpc_ero_verifall: ["wpcero", "st4geari_co_2p5km_with_40km_radius","st4geffg_co_2p5km_with_40km_radius","lsr_flash","lsr_flood","usgs"],
   wpc_ero_verifpp: ["pp_co_2p5km", "wpcero"],
   wpc_ero_verifallnc: [],

@@ -13,19 +13,15 @@ import Tooltip from "@mui/material/Tooltip"
 import ToggleButton from "@mui/material/ToggleButton"
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from "@mui/material/Typography"
-import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper';
-import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import HelpIcon from '@mui/icons-material/Help';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 import { NavBar } from "@atkingtornado/wpc-navbar-reactjs"
 
 import { ThemeToggle } from "./features/ThemeToggle"
 import { DataDisplay } from "./features/DataDisplay"
+import { useShownOverlays } from "./hooks/useShownOverlays"
 import { AboutModal } from "./features/AboutModal"
 import { useTheme } from "./context/ThemeContext"
 
@@ -51,6 +47,13 @@ function App() {
 
   // State for controlling the help/about modal visibility
   const [aboutModalOpen, setAboutModalOpen] = useState<boolean>(false)
+
+  // Prototype banner: dismissible for the current visit, back on the next one
+  // (the same convention as wpc-urrd / wpc-wssi)
+  const [showPrototypeAlert, setShowPrototypeAlert] = useState<boolean>(true)
+
+  // Boundary / road overlay toggles (persisted) - at the App level so both compared maps share them
+  const [shownOverlays, setShownOverlays] = useShownOverlays()
 
   // State for controlling the interactive map view - at the App level to facilitate sync when comparing
   const [mapViewState, setMapViewState] = useState<MapViewState>({
@@ -79,7 +82,7 @@ function App() {
   /**
     * Toggles between static image view and interactive map view
   */
-  const handleDisplayTypeChange = (e, newValue) => {
+  const handleDisplayTypeChange = (_e: React.MouseEvent<HTMLElement>, newValue: "static" | "interactive" | null) => {
     if(newValue !== null) {
       setDisplayType(newValue);
     }
@@ -90,9 +93,15 @@ function App() {
       {/* Header section with navbar and alert */}
       <div className="z-30 flex-shrink-0 relative">
         <NavBar theme={mode} />
-        <Alert className="z-0 relative flex justify-center" severity="error">
-          ****THIS IS A PROTOTYPE WEBSITE****
-        </Alert>
+        {showPrototypeAlert && (
+          <Alert
+            className="z-0 relative flex justify-center"
+            severity="error"
+            onClose={() => setShowPrototypeAlert(false)}
+          >
+            ****THIS IS A PROTOTYPE WEBSITE****
+          </Alert>
+        )}
       </div>
 
       {/* container that takes remaining height */}
@@ -134,12 +143,12 @@ function App() {
 
           <div className={`flex ${comparisonToggled ? 'flex-row' : ''}`}>
             <div className={comparisonToggled ? 'w-[50%]' : 'w-full'}>
-              <DataDisplay mapViewState={mapViewState} setMapViewState={setMapViewState} displayType={displayType} />
+              <DataDisplay mapViewState={mapViewState} setMapViewState={setMapViewState} displayType={displayType} shownOverlays={shownOverlays} setShownOverlays={setShownOverlays} />
             </div>
 
             {comparisonToggled && (
               <div className="w-[50%]">
-                <DataDisplay mapViewState={mapViewState} setMapViewState={setMapViewState} displayType={displayType} />
+                <DataDisplay mapViewState={mapViewState} setMapViewState={setMapViewState} displayType={displayType} shownOverlays={shownOverlays} setShownOverlays={setShownOverlays} />
               </div>
             )}
           </div>

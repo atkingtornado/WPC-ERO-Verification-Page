@@ -12,7 +12,7 @@ import utc from 'dayjs/plugin/utc'
 import { ImageDisplay } from "./ImageDisplay"
 import { MapDisplay } from "./MapDisplay"
 import { SelectionMenu } from "./SelectionMenu"
-import type { MenuSelection, MapViewState } from "./types"
+import type { MenuSelection, MapViewState } from "../types"
 
 dayjs.extend(utc)
 
@@ -21,8 +21,11 @@ interface DataDisplayProps {
   mapViewState: MapViewState;
   setMapViewState: React.Dispatch<React.SetStateAction<MapViewState>>;
   displayType: "static"|"interactive";
+  /** Boundary / road overlay toggles, owned by App so both compared maps share them */
+  shownOverlays: Record<string, boolean>;
+  setShownOverlays: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
 }
-export const DataDisplay = ({ mapViewState, setMapViewState, displayType }: DataDisplayProps) => {
+export const DataDisplay = ({ mapViewState, setMapViewState, displayType, shownOverlays, setShownOverlays }: DataDisplayProps) => {
 
   // State for storing menu selections
   const [selection, setSelection] = useState<MenuSelection>({
@@ -34,7 +37,7 @@ export const DataDisplay = ({ mapViewState, setMapViewState, displayType }: Data
   /**
     * Handles updating menu selection based on provided key/value
   */
-  const updateSelection = <K extends keyof SelectionState>(key: K, value: SelectionState[K]) => {
+  const updateSelection = <K extends keyof MenuSelection>(key: K, value: MenuSelection[K]) => {
     setSelection(prev => ({ ...prev, [key]: value }));
   };
 
@@ -54,6 +57,8 @@ export const DataDisplay = ({ mapViewState, setMapViewState, displayType }: Data
           selection={selection}
           mapViewState={mapViewState}
           setMapViewState={setMapViewState}
+          shownOverlays={shownOverlays}
+          setShownOverlays={setShownOverlays}
         />
       }
     </>

@@ -1,69 +1,51 @@
-# React + TypeScript + Vite
+# WPC ERO Verification
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interactive verification of the WPC Excessive Rainfall Outlook (ERO): static
+verification plots and an interactive MapLibre map of the outlook contours
+against flash-flood reports, USGS gauges and gridded exceedance products, with
+a side-by-side comparison mode and a light/dark theme.
 
-Currently, two official plugins are available:
+## Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+`npm run build` type-checks (`tsc -b`) and produces the deployable site in
+`dist/`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Map
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+The interactive map draws the same basemap as wpc-urrd and wpc-wssi: the
+detailed MapLibre style (`src/constants/mapStyles.ts`, light and dark variants
+following the app theme) served from the WPC-hosted OpenMapTiles vector tiles
+rather than a third-party style service. It carries land, water, borders,
+major highways and city labels, and no water-body labels. The floating
+**layers button** at the map's top-right (`src/features/LayerMenu.tsx`)
+toggles the geographic boundary overlays (state borders on by default, FEMA
+regions, NWS CWAs, RFCs, counties) and the major roads overlay, drawn from the
+tile pyramids under `https://www.wpc.ncep.noaa.gov/geographical_boundaries/`.
+The choices persist in `localStorage` and are shared by both maps in
+comparison mode.
+
+Those tile hosts and the verification GeoJSON send no CORS headers, so on
+localhost the Vite dev server proxies them (`/proxy/wpc`, `/proxy/maptiler`
+in `vite.config.ts`; `src/constants/externalOrigins.ts` switches the URLs).
+In production the site is same-origin with them and no proxy is involved.
+
+## Deploying
+
+Deploys use the shared [wpc-deploy](https://github.com/atkingtornado/wpc-deploy)
+script through the `deploy.sh` wrapper; this app's endpoints are listed in
+`deploy.config.sh`.
+
+```bash
+./deploy.sh --list              # show the configured targets
+./deploy.sh dev --dry-run       # build, then show what would change
+./deploy.sh dev                 # build and deploy to the dev endpoint
+./deploy.sh production          # prompts: type "production"
+./deploy.sh dev --skip-build    # reuse existing ./dist
 ```
+
+Requires the AWS CLI configured with credentials for the NOAA GovCloud account.
